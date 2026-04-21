@@ -10,21 +10,26 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <section class="flex-1 flex justify-center items-center select-none text-foreground0">
         <div class="w-94 flex flex-col gap-4">
             <div class="flex items-baseline gap-4">
-                <h3 class="font-semibold text-shadow-lg">login</h3>
-                <button class="text-foreground0 opacity-60 text-shadow-lg/25">(register)</button>
+                <h3 class="font-semibold text-shadow-lg">register</h3>
+                <button class="text-foreground0 opacity-60 text-shadow-lg/25">(login)</button>
             </div>
             <div class="mb-24">
                 <form action="" class="flex flex-col gap-6">
                     <div class="flex flex-col">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter your email" class="auth-input">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" class="auth-input">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex flex-col">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="Enter your email" class="auth-input">
+                        </div>
                     </div>
                     <div class="flex flex-col gap-1">
                         <div class="flex flex-col">
                             <label for="password">Password</label>
                             <input type="password" id="password" placeholder="Enter your password" class="auth-input">
                         </div>
-                        <button class="w-full text-end text-foreground0 text-sm opacity-60">Forgot Password?</button>
                     </div>
                     <button class="mt-4 py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Register</button>
                 </form>
