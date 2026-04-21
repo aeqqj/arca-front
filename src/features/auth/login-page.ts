@@ -1,0 +1,28 @@
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+    <header class="h-16 w-full px-6 flex items-center">
+        <button class="cursor-pointer">
+            <i class="ri-arrow-left-line text-foreground0 text-3xl"></i>
+        </button>
+    </header>
+    <section class="flex-1 flex justify-center items-center select-none text-foreground0">
+        <div class="w-94 flex flex-col gap-6">
+            <h3 class="font-semibold text-shadow-xl">hello!</h3>
+            <div class="mb-24">
+                <form action="" class="flex flex-col gap-8">
+                    <div class="flex flex-col">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" class="auth-input">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex flex-col">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter your password" class="auth-input">
+                        </div>
+                        <button class="w-full text-end text-foreground0 text-sm opacity-60">Forgot Password?</button>
+                    </div>
+                    <button class="py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Log In</button>
+                </form>
+            </div>
+        </div>
+    </section>
+`;
