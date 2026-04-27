@@ -26,7 +26,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
                         </div>
                         <button class="w-full text-end text-foreground0 text-sm opacity-60">Forgot Password?</button>
                     </div>
-                    <button class="mt-4 py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Register</button>
+                    <button class="mt-4 py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Login</button>
                 </form>
             </div>
         </div>
