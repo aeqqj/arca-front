@@ -8,20 +8,47 @@
 
     --color-background0: #1c1c1c;
     --color-background1: #2c2c2c;
-    --color-background3: #3c3c3c;
+    --color-background2: #3c3c3c;
 
     --color-foreground0: #f2f2f2;
 }
 
+@layer components {
+    .auth-input {
+        @apply px-5 py-3 border border-transparent rounded-xl bg-background1 text-foreground0 text-sm shadow-xl;
+    }
+}
+
 * {
-    color: var(--color-foreground0);
     font-family: var(--font-poppins);
 }
 
 body {
+    height: 100vh;
+    width: 100vw;
     background-color: var(--color-background0);
+}
+
+input {
+    outline: none;
+}
+
+button {
+    cursor: pointer;
 }
 
 h1 {
     font-size: 8rem;
+}
+
+h2 {
+    font-size: 6rem;
+}
+
+h3 {
+    font-size: 4rem;
+}
+
+h4 {
+    font-size: 2rem;
 }
