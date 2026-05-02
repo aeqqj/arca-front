@@ -1,5 +1,4 @@
 import { schoolCard } from "./components/schoolCard.ts";
-import "remixicon/fonts/remixicon.css";
 
 export function LandingPage() {
   document.querySelector<HTMLDivElement>("#app")!.innerHTML = `

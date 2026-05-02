@@ -1,5 +1,3 @@
-import "remixicon/fonts/remixicon.css";
-
 export function RegisterPage() {
     document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <header class="h-16 w-full px-6 flex items-center">
