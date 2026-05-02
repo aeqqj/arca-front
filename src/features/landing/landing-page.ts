@@ -1,8 +1,9 @@
 import { schoolCard } from "./components/schoolCard.ts";
-import 'remixicon/fonts/remixicon.css';
+import "remixicon/fonts/remixicon.css";
 import "./style.css";
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+export function LandingPage() {
+  document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <header class="h-16 w-full px-6 flex items-center justify-end">
         <button class="cursor-pointer">
             <i class="ri-user-line text-3xl"></i>
@@ -17,4 +18,5 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
             ${schoolCard("test")}
         </div>
     </section>
-`;
+    `;
+};
