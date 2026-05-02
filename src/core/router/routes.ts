@@ -6,10 +6,10 @@ export const routes: Record<string, { page: () => void } > = {
     '/': {
         page: LandingPage,
     },
-    'auth/signin': {
+    '/auth/login': {
         page: LoginPage,
     },
-    'auth/signup': {
+    '/auth/register': {
         page: RegisterPage,
     }
     // 404: {
