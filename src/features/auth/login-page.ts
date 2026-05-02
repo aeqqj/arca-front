@@ -1,5 +1,4 @@
 import "remixicon/fonts/remixicon.css";
-import "./style.css";
 
 export function LoginPage() {
     document.querySelector<HTMLDivElement>("#app")!.innerHTML = `

@@ -1,30 +1,31 @@
 import { routes } from "./routes.ts";
 
 document.addEventListener("click", (e) => {
-    const target = e.target as HTMLAnchorElement;
+	const target = e.target as HTMLAnchorElement;
 
-    if (!target!.matches("nav a")) {
-        return;
-    }
+	if (!target!.matches("nav a")) {
+		return;
+	}
 
-    e.preventDefault();
+	e.preventDefault();
 
-    window.history.pushState({}, "", target!.href);
+	window.history.pushState({}, "", target!.href);
 
-    urlLocationHandler();
-})
+	urlLocationHandler();
+});
 
-const urlLocationHandler = async () => {
-    let location = window.location.pathname;
-    
-    if (location.length == 0) {
-        location = "/";
-    }
+export const urlLocationHandler = () => {
+	let location = window.location.pathname;
 
-    const route = routes[location] || routes[404];
+    console.log("current path:", location);
 
-    const html = await fetch(route.page).then((res) => res.text());
-    document.getElementById("content")!.innerHTML = html;
+	if (location.length == 0) {
+		location = "/";
+	}
+
+	const route = routes[location] || routes[404];
+
+	route.page();
 };
 
 window.onpopstate = urlLocationHandler;
