@@ -2,14 +2,6 @@ import avatarPlaceholder from "/dog.png";
 import { link, githubLink, youtubeLink } from "./link.ts";
 import { file } from "./file.ts";
 
-function loadVideo(el: HTMLElement) {
-	const id = el.dataset.videoId;
-	el.outerHTML = `
-        <iframe class="w-full aspect-video" src="https://www.youtube.com/embed/${id}?autoplay=1" 
-            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    `;
-}
-
 export function post() {
 	return `
         <div class="w-200 h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs hover:bg-bg3/60 transition-colors cursor-pointer shadow-md">
@@ -54,7 +46,7 @@ export function post() {
                         <i data-lucide="square-arrow-out-up-right" class="w-4 h-4 text-fg3"></i> 
                     </div>
                 </div>
-                <div class="w-fit h-fit py-0.5 px-4 bg-red-100 text-bg2 rounded-xs text-sm">Data Structures & Algorithms</div>
+                <div class="w-fit h-fit py-1 px-4 bg-red-100 text-bg2 rounded-xs text-sm">Data Structures & Algorithms</div>
             </div>
         </div>
     `;

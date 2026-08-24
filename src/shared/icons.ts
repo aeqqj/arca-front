@@ -13,6 +13,7 @@ import {
     GitFork,
     FileText,
     Link2,
+    Pin,
 } from "lucide";
 
 export function initIcons() {
@@ -31,6 +32,7 @@ export function initIcons() {
             GitFork,
             FileText,
             Link2,
+            Pin,
 		},
 	});
 }

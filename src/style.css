@@ -57,6 +57,9 @@
     .auth-input {
         @apply px-5 py-3 border border-transparent rounded-xl text-sm shadow-xl;
     }
+    .link {
+        @apply hover:text-fg-link transition-colors
+    }
 }
 
 * {
