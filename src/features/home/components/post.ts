@@ -1,6 +1,6 @@
 import avatarPlaceholder from "/dog.png";
-import { link, githubLink, youtubeLink } from "./link.ts";
-import { file } from "./file.ts";
+import { link, githubLink, youtubeLink } from "../../../shared/components/link.ts";
+import { file } from "../../../shared/components/file.ts";
 
 function loadVideo(el: HTMLElement) {
 	const id = el.dataset.videoId;
