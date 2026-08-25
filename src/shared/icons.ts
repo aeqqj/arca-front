@@ -14,6 +14,8 @@ import {
     FileText,
     Link2,
     Pin,
+    Eye,
+    EyeClosed,
 } from "lucide";
 
 export function initIcons() {
@@ -33,6 +35,8 @@ export function initIcons() {
             FileText,
             Link2,
             Pin,
+            Eye,
+            EyeClosed,
 		},
 	});
 }

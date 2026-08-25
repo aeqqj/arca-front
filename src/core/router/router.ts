@@ -3,7 +3,7 @@ import { routes } from "./routes.ts";
 document.addEventListener("click", (e) => {
 	const target = e.target as HTMLAnchorElement;
 
-	if (!target!.matches("nav a")) {
+	if (!target!.matches("a[href=^='/']")) {
 		return;
 	}
 
