@@ -1,16 +1,16 @@
-import { LoginPage } from "../../features/auth/login-page.ts";
-import { RegisterPage } from "../../features/auth/register-page.ts";
+import { SignInPage } from "../../features/auth/signin-page.ts";
+import { SignUpPage } from "../../features/auth/signup-page.ts";
 import { HomePage } from "../../features/home/home-page.ts";
 
 export const routes: Record<string, { page: () => void } > = {
     '/': {
         page: HomePage,
     },
-    '/auth/login': {
-        page: LoginPage,
+    '/auth/signin': {
+        page: SignInPage,
     },
-    '/auth/register': {
-        page: RegisterPage,
+    '/auth/signup': {
+        page: SignUpPage,
     },
     // 404: {
     //     page: ErrorPage,
