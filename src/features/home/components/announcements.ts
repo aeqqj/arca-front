@@ -5,7 +5,7 @@ export function announcements() {
                 <!-- <i data-lucide="pin" class="w-4 h-4 text-fg3"></i> -->
                 <h2 class="text-fg2 text-title-md font-medium">Announcements</h2>
             </div>
-            <div class="flex flex-col gap-4 text-body-lg text-fg3">
+            <div class="flex flex-col gap-4 text-body-md text-fg3">
                 <a href="" class="link"> Welcome to the new DCISM board, arca! </a>
                 <a href="" class="link"> F2F Data Structures and Algorithms Tutorial! </a>
             </div>

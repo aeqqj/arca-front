@@ -9,7 +9,7 @@ export function extractYoutubeId(url: string): string | null {
 
 export function githubLink() {
     return `
-        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2">
+        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 hover:bg-bg5/80 transition-colors">
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <img src="${github}" class="w-5 h-5"/>
             </div>
@@ -36,7 +36,7 @@ export function githubLink() {
 
 export function link() {
     return `
-        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 items-center">
+        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 items-center hover:bg-bg5/80 transition-colors">
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <i data-lucide="link2" class="w-4 h-4 text-fg-icon"></i> 
             </div>
@@ -50,7 +50,7 @@ export function link() {
 
 export function youtubeLink() {
     return `
-        <div class="relative w-full aspect-video bg-bg4 cursor-pointer" data-video-id="4WfSohJ9K5o" data-yt-thumb>
+        <div class="relative w-full aspect-video bg-bg4 cursor-pointer hover:bg-bg5/80 transition-colors" data-video-id="4WfSohJ9K5o" data-yt-thumb>
             <img src="https://img.youtube.com/vi/4WfSohJ9K5o/maxresdefault.jpg" class="w-full h-full object-cover" />
             <div class="absolute inset-0 flex items-center justify-center">
                 <i data-lucide="play" class="w-12 h-12 text-white"></i>
