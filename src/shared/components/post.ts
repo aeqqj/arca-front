@@ -13,16 +13,16 @@ export function post() {
                             <a href="/" class="text-fg4 hover:text-fg-link transition-colors">retardedmoron69</a>
                             <p class="text-fg5">&nbsp; • 15 hours</p>
                         </div>
-                        <div class="p-1 hover:bg-bg5/80 transition-colors rounded-xs">
+                        <div class="p-1 hover:bg-bg5/60 transition-colors rounded-xs">
                             <i data-lucide="ellipsis" class="w-4 h-4 text-fg3"></i>
                         </div>
                     </div>
-                    <p class="text-fg2 text-title-md">
+                    <p class="text-fg2 text-title-sm font-medium">
                         google made btrees in golang instead of c and so should you go is good its better than everything
                     </p>
                 </div>
             </div>
-            <p class="text-fg3 text-text"> go is GOOD use GO, check this shit out</p>
+            <p class="text-fg3 text-body-md"> go is GOOD use GO, check this shit out</p>
 
             ${youtubeLink()}
 
