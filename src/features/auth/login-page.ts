@@ -17,6 +17,12 @@ export function LoginPage() {
                             <label for="email">Email</label>
                             <input type="email" id="email" placeholder="Enter your email" class="auth-input">
                         </div>
+<<<<<<< HEAD
+                        <button class="w-full text-end text-foreground0 text-sm opacity-60">Forgot Password?</button>
+                    </div>
+                    <button class="mt-4 py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Login</button>
+                </form>
+=======
                         <div class="flex flex-col gap-1">
                             <div class="flex flex-col">
                                 <label for="password">Password</label>
@@ -27,6 +33,7 @@ export function LoginPage() {
                         <button class="mt-4 py-2 bg-foreground0 text-background1 text-base border border-white rounded-xl shadow-xl">Register</button>
                     </form>
                 </div>
+>>>>>>> origin/main
             </div>
         </section>
     `;
