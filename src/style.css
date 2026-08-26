@@ -65,7 +65,6 @@
 * {
     font-family: var(--font-poppins);
 }
-
 body {
     height: 100vh;
     width: 100vw;
@@ -79,3 +78,9 @@ input {
 button {
     cursor: pointer;
 }
+
+iframe {
+    outline: none;
+    border: none;
+}
+
