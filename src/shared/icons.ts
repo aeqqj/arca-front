@@ -16,6 +16,7 @@ import {
     Pin,
     Eye,
     EyeClosed,
+    ChevronDown,
 } from "lucide";
 
 export function initIcons() {
@@ -37,6 +38,7 @@ export function initIcons() {
             Pin,
             Eye,
             EyeClosed,
+            ChevronDown,
 		},
 	});
 }

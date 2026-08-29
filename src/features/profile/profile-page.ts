@@ -14,10 +14,19 @@ export function ProfilePage() {
         <div class="w-full flex">
             ${sideBar()} 
             <div class="text-fg1 w-full p-12 flex gap-10 justify-center">
-                <div class="flex flex-col gap-2">
-                    ${profile()}
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col">
+                        ${profile()}
+                        <hr class="text-separator mt-1">
+                    </div>
                     <div class="flex flex-col gap-6">
-                        ${post()}
+                        <button class="flex items-center gap-1">
+                            <p>Recent</p>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-fg3"></i>
+                        </button>
+                        <div>
+                            ${post()}
+                        </div>
                     </div>
                 </div>
                 <div class="flex flex-col gap-8">
