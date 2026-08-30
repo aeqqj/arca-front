@@ -3,6 +3,20 @@ const courses = [
   "Programming 2",
   "Algorithms & Complexities",
   "Data Structures & Algorithms",
+  "Discrete Structures I",
+  "Discrete Structures II",
+  "Discrete Structures III",
+  "Digital Logic Design and Digital Computer Circuits",
+  "Architecture and Organization with Assembly Language",
+  "Networking I",
+  "Networking II",
+  "Web Development I",
+  "Web Development II",
+  "Mobile Development",
+  "Information Management I",
+  "Information Management II",
+  "Data Analytics",
+  "Technopreneurship",
 ]
 
 export function sideBar() {
