@@ -3,84 +3,96 @@
 @import "tailwindcss";
 
 @theme {
-    --font-poppins: "Poppins";
+	--font-poppins: "Poppins";
 
-    --color-bg1: #101010;
-    --color-bg2: #121212;
-    --color-bg3: #171717;
-    --color-bg4: #1C1C1C;
-    --color-bg5: #202020;
-    --color-bg-icon: #171717;
+	--color-bg1: #101010;
+	--color-bg2: #121212;
+	--color-bg3: #171717;
+	--color-bg4: #1c1c1c;
+	--color-bg5: #202020;
+	--color-bg-icon: #171717;
 
-    --color-fg1: #F2F2F2;
-    --color-fg2: #E5E5E5;
-    --color-fg3: #D5D5D5;
-    --color-fg4: #A3A3A3;
-    --color-fg5: #808080;
-    --color-fg-link: #7DD3FC;
-    --color-fg-icon: #A1A1A1;
-    --color-fg-placeholder: #6B6B6B;
+	--color-fg1: #f2f2f2;
+	--color-fg2: #e5e5e5;
+	--color-fg3: #d5d5d5;
+	--color-fg4: #a3a3a3;
+	--color-fg5: #808080;
+	--color-fg-link: #7dd3fc;
+	--color-fg-icon: #a1a1a1;
+	--color-fg-placeholder: #6b6b6b;
 
-    --color-good: #34D399;
-    --color-bad: #FB2C36;
+	--color-good: #34d399;
+	--color-bad: #fb2c36;
 
-    --color-border: #333333;
-    --color-separator: #2E2E2E;
+	--color-border: #333333;
+	--color-separator: #2e2e2e;
 
-    --text-body-xxs: 8px;
-    --text-body-xxs--line-height: normal;
-    --text-body-xs: 10px;
-    --text-body-xs--line-height: normal;
-    --text-body-sm: 12px;
-    --text-body-sm--line-height: normal;
-    --text-body-md: 14px;
-    --text-body-md--line-height: normal;
-    --text-body-lg: 16px;
-    --text-body-lg--line-height: normal;
+	--text-body-xxs: 8px;
+	--text-body-xxs--line-height: normal;
+	--text-body-xs: 10px;
+	--text-body-xs--line-height: normal;
+	--text-body-sm: 12px;
+	--text-body-sm--line-height: normal;
+	--text-body-md: 14px;
+	--text-body-md--line-height: normal;
+	--text-body-lg: 16px;
+	--text-body-lg--line-height: normal;
 
-    --text-label-sm: 11px;
-    --text-label-sm--line-height: normal;
-    --text-label-md: 12px;
-    --text-label-md--line-height: normal;
-    --text-label-lg: 14px;
-    --text-label-lg--line-height: normal;
+	--text-label-sm: 11px;
+	--text-label-sm--line-height: normal;
+	--text-label-md: 12px;
+	--text-label-md--line-height: normal;
+	--text-label-lg: 14px;
+	--text-label-lg--line-height: normal;
 
-    --text-title-sm: 16px;
-    --text-title-sm--line-height: normal;
-    --text-title-md: 18px;
-    --text-title-md--line-height: normal;
-    --text-title-lg: 20px;
-    --text-title-lg--line-height: normal;
+	--text-title-sm: 16px;
+	--text-title-sm--line-height: normal;
+	--text-title-md: 18px;
+	--text-title-md--line-height: normal;
+	--text-title-lg: 20px;
+	--text-title-lg--line-height: normal;
 }
 
 @layer components {
-    .auth-input {
-        @apply bg-bg3 px-5 py-3.5 border border-border rounded-xs text-sm text-fg-placeholder;
-    }
-    .link {
-        @apply hover:text-fg-link transition-colors
-    }
+	.auth-input {
+		@apply bg-bg3 px-5 py-3.5 border border-border rounded-xs text-sm text-fg-placeholder;
+	}
+	.link {
+		@apply hover:text-fg-link transition-colors;
+	}
+	.toolbar-btn {
+		@apply w-8 h-8 flex items-center justify-center rounded-xs text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors;
+	}
+	.toolbar-btn.is-active {
+		@apply bg-white/10 text-fg1;
+	}
+	.toolbar-select {
+		@apply cursor-pointer bg-transparent text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors text-sm px-2 py-1 rounded-xs outline-none; 
+	}
+	.editor-input:empty::before {
+		content: attr(data-placeholder);
+		@apply text-fg2/50 pointer-events-none;
+	}
 }
 
 * {
-    font-family: var(--font-poppins);
+	font-family: var(--font-poppins);
 }
 body {
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--color-bg1);
+	height: 100vh;
+	width: 100vw;
+	background-color: var(--color-bg1);
 }
 
 input {
-    outline: none;
+	outline: none;
 }
 
 button {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 iframe {
-    outline: none;
-    border: none;
+	outline: none;
+	border: none;
 }
-
