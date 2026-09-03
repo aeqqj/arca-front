@@ -1,4 +1,4 @@
-export function file() {
+export function attachment() {
     return `
         <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 items-center hover:bg-bg5/80 transition-colors">
             <div class="w-fit h-fit p-2.5 bg-bg-icon">

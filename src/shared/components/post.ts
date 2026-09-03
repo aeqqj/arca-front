@@ -1,6 +1,6 @@
 import avatarPlaceholder from "/dog.png";
 import { link, githubLink, youtubeLink } from "./link.ts";
-import { file } from "./file.ts";
+import { attachment } from "./attachment.ts";
 
 export function post() {
 	return `
@@ -31,8 +31,8 @@ export function post() {
             ${link()}
 
             <div class="flex gap-3.5">
-                ${file()}
-                ${file()}
+                ${attachment()}
+                ${attachment()}
             </div>
 
             <div class="flex items-center justify-between">

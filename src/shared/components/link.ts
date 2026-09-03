@@ -13,12 +13,12 @@ export function githubLink() {
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <img src="${github}" class="w-5 h-5"/>
             </div>
-            <div class="flex flex-col gap-1.5">
-                <div class="flex text-label-sm">
+            <div class="flex flex-col gap-1.5 min-w-0 flex-1">
+                <div class="flex text-label-sm truncate">
                     <p class="text-fg4">google/</p>
                     <p class="text-fg-link">&nbsp;btree</p>
                 </div>
-                <p class="text-sm text-fg3">A Go Implementation of B-Trees, mirroring the interfaces/behavior of container/heap and container list. </p>
+                <p class="text-sm text-fg3 truncate">A Go Implementation of B-Trees, mirroring the interfaces/behavior of container/heap and container list.</p>
                 <div class="flex text-body-sm gap-4 text-fg5">
                     <div class="flex gap-1 items-center">
                         <i data-lucide="star" class="w-4 h-4"></i>
@@ -40,9 +40,9 @@ export function link() {
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <i data-lucide="link2" class="w-4 h-4 text-fg-icon"></i> 
             </div>
-            <div class="flex flex-col">
-                <p class="text-sm text-fg3">Java Documentation - Oracle</p>
-                <p class="text-xs text-fg5">docs.oracle.com</p>
+            <div class="flex flex-col min-w-0 flex-1">
+                <p class="text-sm text-fg3 truncate">Java Documentation - Oracle</p>
+                <p class="text-xs text-fg5 truncate">docs.oracle.com</p>
             </div>
         </div>
     `
