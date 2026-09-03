@@ -12,8 +12,8 @@ export function CreatePostPage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="w-full py-12 px-8 flex gap-10 justify-center">
-                <div class="flex gap-8 flex-col">
+            <div class="w-full px-12 py-8 flex gap-10 justify-center">
+                <div class="flex gap-4 flex-col">
                     <div class="flex justify-between">
                         <h1 class="text-fg1 font-medium">Create Post</h1>
                         <button class="w-fit h-fit px-3 py-2 text-fg3 text-body-lg border border-border hover:bg-bg3 transition-colors">Pick a course</button>

@@ -16,7 +16,7 @@ export function createAttachments() {
     return `
         <div class="w-100 flex flex-col gap-2">
             <div class="w-full flex justify-between items-center">
-                <label class="text-fg2">Attachments</label>
+                <label class="text-fg2 font-medium">Attachments</label>
                 <button type="button" id="attachments-add" class="p-2 hover:bg-bg5/60 transition-colors">
                     <i data-lucide="plus" class="w-4.5 h-4.5 text-fg2 pointer-events-none"></i>
                 </button>

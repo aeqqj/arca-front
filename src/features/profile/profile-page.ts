@@ -13,7 +13,7 @@ export function ProfilePage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="text-fg1 w-full p-12 flex gap-10 justify-center">
+            <div class="text-fg1 w-full px-12 py-8 flex gap-10 justify-center">
                 <div class="flex flex-col gap-6">
                     <div class="flex flex-col">
                         ${profile()}
