@@ -31,6 +31,7 @@ import {
 	Redo2,
     Paperclip,
     Link,
+    X,
 } from "lucide";
 
 export function initIcons() {
@@ -67,6 +68,7 @@ export function initIcons() {
 			Redo2,
             Paperclip,
             Link,
+            X,
 		},
 	});
 }
