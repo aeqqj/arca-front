@@ -12,7 +12,7 @@ export function HomePage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="w-full p-12 flex gap-10 justify-center">
+            <div class="w-full px-12 py-8 flex gap-10 justify-center">
                 <div class="flex flex-col gap-6">
                     ${post()}
                     ${post()}

@@ -12,7 +12,7 @@ export function CreatePostPage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="w-full p-12 flex gap-10 justify-center">
+            <div class="w-full py-12 px-8 flex gap-10 justify-center">
                 <div class="flex gap-8 flex-col">
                     <div class="flex justify-between">
                         <h1 class="text-fg1 font-medium">Create Post</h1>

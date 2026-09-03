@@ -1,6 +1,6 @@
 export function profileExtra() {
 	return `
-        <div class="w-100 h-fit bg-bg2 border border-border p-6 gap-4 flex flex-col">
+        <div class="w-100 h-fit bg-bg2 border border-border p-6 gap-4 flex flex-col rounded-xs">
             <div class="flex gap-2 items-center">
                 <h2 class="text-fg2 text-title-md font-medium">More from <span class="text-fg-link cursor-pointer">retardedmoron69</span></h2>
             </div>

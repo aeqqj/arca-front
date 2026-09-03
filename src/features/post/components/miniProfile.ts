@@ -3,7 +3,7 @@ import cover from "/frieren.png";
 
 export function miniProfile() {
 	return `
-        <div class="w-100 h-fit bg-bg2 flex flex-col border border-border">
+        <div class="w-100 h-fit bg-bg2 flex flex-col border border-border rounded-xs">
             <div class="relative">
                 <img src="${cover}" class="h-40 w-full object-cover object-top rounded-xs">
                 <img src="${avatar}" class="h-20 rounded-xs absolute -bottom-10 left-6"> 
