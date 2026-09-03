@@ -1,12 +1,12 @@
-import avatarPlaceholder from "/dog.png";
-import backPlaceholder from "/frieren.png";
+import avatar from "/dog.png";
+import cover from "/frieren.png";
 
 export function profile() {
 	return `
     <div class="w-200"> 
         <div class="relative">
-            <img src="${backPlaceholder}" class="h-74 w-full object-cover object-top rounded-xs">
-            <img src="${avatarPlaceholder}" class="h-40 rounded-xs absolute -bottom-18 left-4"> 
+            <img src="${cover}" class="h-74 w-full object-cover object-top rounded-xs">
+            <img src="${avatar}" class="h-40 rounded-xs absolute -bottom-18 left-4"> 
         </div>
         <div class="p-4 flex flex-col gap-2">
             <div class="h-18 w-full flex justify-end">
