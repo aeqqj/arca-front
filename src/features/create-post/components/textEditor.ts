@@ -6,11 +6,9 @@ import {
 	$getSelection,
 	$isRangeSelection,
 	FORMAT_TEXT_COMMAND,
-	FORMAT_ELEMENT_COMMAND,
 	UNDO_COMMAND,
 	REDO_COMMAND,
 	type LexicalEditor,
-	type ElementFormatType,
 } from "lexical";
 import {
 	registerRichText,
@@ -35,25 +33,13 @@ import { $isHeadingNode } from "@lexical/rich-text";
 
 const EDITOR_ID = "post-editor";
 
-// Icon per alignment state, so the button reflects (not just sets) alignment.
-const ALIGN_ICONS: Record<ElementFormatType, string> = {
-	left: "align-left",
-	center: "align-center",
-	right: "align-right",
-	justify: "align-justify",
-	start: "align-left",
-	end: "align-right",
-};
-
-const ALIGN_CYCLE: ElementFormatType[] = ["left", "center", "right", "justify"];
-
 export function textEditor(): string {
 	return `
     <div class="text-editor-wrapper w-full flex flex-col gap-2">
-      <p class="text-fg1">Description</p>
+      <p class="text-fg2">Description</p>
 
       <div class="border border-border rounded-xs overflow-hidden">
-        <div class="toolbar flex items-center gap-1 px-3 py-2 border-b border-white/10 flex-wrap bg-bg3">
+        <div class="toolbar flex items-center gap-1 px-3 py-2 border-b border-border flex-wrap bg-bg3">
           <button type="button" data-cmd="undo" class="toolbar-btn">
             <i data-lucide="undo2" class="w-4 h-4"></i>
           </button>
@@ -102,17 +88,11 @@ export function textEditor(): string {
           <button type="button" data-cmd="quote" class="toolbar-btn">
             <i data-lucide="quote" class="w-4 h-4"></i>
           </button>
-
-          <div class="w-px h-5 bg-separator mx-1"></div>
-
-          <button type="button" data-cmd="align" class="toolbar-btn">
-            <i data-lucide="align-left" class="w-4 h-4"></i>
-          </button>
         </div>
 
         <div
           id="${EDITOR_ID}"
-          class="editor-input min-h-50 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty"
+          class="editor-input min-h-60 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty text-body-md hover:bg-bg3/60 transition-colors"
           contenteditable="true"
           data-placeholder="Start typing here..."
         ></div>
@@ -139,9 +119,9 @@ export function initTextEditor(): LexicalEditor {
 				code: "font-mono bg-bg3 px-1 rounded-xs text-sm",
 			},
 			heading: {
-				h1: "text-2xl font-bold",
-				h2: "text-xl font-bold",
-				h3: "text-lg font-bold",
+				h1: "text-2xl ",
+				h2: "text-xl ",
+				h3: "text-lg ",
 			},
 			quote: "border-l-2 border-border pl-3 italic text-fg2",
 			list: {
@@ -167,8 +147,6 @@ export function initTextEditor(): LexicalEditor {
 	});
 
 	const toolbar = root.parentElement?.querySelector(".toolbar");
-	const alignBtn = toolbar?.querySelector<HTMLElement>('[data-cmd="align"]');
-	const alignIcon = alignBtn?.querySelector<HTMLElement>("i");
 
 	toolbar?.addEventListener("click", (e) => {
 		const btn = (e.target as HTMLElement).closest<HTMLElement>(
@@ -244,28 +222,6 @@ export function initTextEditor(): LexicalEditor {
 					$setBlocksType(selection, () => $createQuoteNode());
 				});
 				break;
-			case "align": {
-				// Read the *current* block's real alignment instead of a blind
-				// module-level counter, so the cycle always starts from where the
-				// selection actually is.
-				let current: ElementFormatType = "left";
-				editor.getEditorState().read(() => {
-					const selection = $getSelection();
-					if (!$isRangeSelection(selection)) return;
-					const node = selection.anchor
-						.getNode()
-						.getTopLevelElementOrThrow();
-					const format = node.getFormatType();
-					current = (format || "left") as ElementFormatType;
-				});
-				const idx = ALIGN_CYCLE.indexOf(current);
-				const next =
-					ALIGN_CYCLE[
-						(idx === -1 ? 0 : idx + 1) % ALIGN_CYCLE.length
-					];
-				editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, next);
-				break;
-			}
 		}
 
 		editor.focus();
@@ -302,8 +258,6 @@ export function initTextEditor(): LexicalEditor {
 		editor.focus();
 	});
 
-	// Keep block-type select + align icon synced to the caret's actual block,
-	// and toggle the empty-state placeholder.
 	editor.registerUpdateListener(({ editorState }) => {
 		editorState.read(() => {
 			const rootNode = $getRoot();
@@ -322,17 +276,6 @@ export function initTextEditor(): LexicalEditor {
 					? node.getTag()
 					: "paragraph";
 			}
-
-			if (alignIcon) {
-				const format = (node.getFormatType() ||
-					"left") as ElementFormatType;
-				alignIcon.setAttribute(
-					"data-lucide",
-					ALIGN_ICONS[format] ?? "align-left",
-				);
-				// data-lucide swaps require re-running the icon library's replace
-				// pass (e.g. window.lucide?.createIcons()) since it's not reactive.
-			}
 		});
 	});
 
@@ -344,11 +287,6 @@ export function getTextEditor(): LexicalEditor | null {
 	return editorInstance;
 }
 
-/**
- * Returns the editor content as HTML, preserving bold/italic/headings/
- * lists/quotes/alignment — unlike plain getTextContent(), which discards
- * all formatting.
- */
 export function getEditorHtmlContent(): string {
 	if (!editorInstance) return "";
 	return editorInstance
@@ -356,7 +294,6 @@ export function getEditorHtmlContent(): string {
 		.read(() => $generateHtmlFromNodes(editorInstance!, null));
 }
 
-/** Plain-text fallback, kept for cases where you genuinely just want text. */
 export function getEditorTextContent(): string {
 	if (!editorInstance) return "";
 	return editorInstance

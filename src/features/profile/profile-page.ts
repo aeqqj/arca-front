@@ -5,7 +5,7 @@ import { post } from "./../../shared/components/post.ts";
 import { announcements } from "./components/announcements.ts";
 import { profile } from "./components/profile.ts";
 import { trending } from "./components/trending.ts";
-import { bindYoutubeLinks } from "../../shared/handlers/postHandlers.ts";
+import { bindYoutubeLinks } from "../../shared/handlers/youtubeHandler.ts";
 
 export function ProfilePage() {
 	const app = document.querySelector<HTMLDivElement>("#app")!;

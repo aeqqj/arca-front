@@ -7,7 +7,7 @@ export function bindYoutubeLinks(root: HTMLElement) {
 		if (!id) return;
 
 		thumb.outerHTML = `
-            <div class="w-full aspect-video">
+            <div class="w-full aspect-video border border-border">
                 <iframe
                     class="w-full h-full"
                     src="https://www.youtube.com/embed/${id}?autoplay=1"
