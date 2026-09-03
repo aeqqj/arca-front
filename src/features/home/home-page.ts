@@ -4,7 +4,7 @@ import { sideBar } from "../../shared/components/sideBar.ts";
 import { post } from "./../../shared/components/post.ts"; 
 import { announcements } from "./components/announcements.ts";
 import { trending } from "./components/trending.ts";
-import { bindYoutubeLinks } from "../../shared/handlers/postHandlers.ts";
+import { bindYoutubeLinks } from "../../shared/handlers/youtubeHandler.ts";
 
 export function HomePage() {
 	const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -12,7 +12,7 @@ export function HomePage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="text-fg1 w-full p-12 flex gap-10 justify-center">
+            <div class="w-full p-12 flex gap-10 justify-center">
                 <div class="flex flex-col gap-6">
                     ${post()}
                     ${post()}

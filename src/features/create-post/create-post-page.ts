@@ -1,8 +1,10 @@
 import { initIcons } from "../../shared/icons.ts";
 import { header } from "../../shared/components/header.ts";
 import { sideBar } from "../../shared/components/sideBar.ts";
-import { bindYoutubeLinks } from "../../shared/handlers/postHandlers.ts";
+import { bindYoutubeLinks } from "../../shared/handlers/youtubeHandler.ts";
 import { textEditor, initTextEditor } from "./components/textEditor.ts";
+import { createAttachments } from "./components/createAttachments.ts";
+import { createLinks } from "./components/createLinks.ts";
 
 export function CreatePostPage() {
 	const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -10,38 +12,37 @@ export function CreatePostPage() {
         ${header()}
         <div class="w-full flex">
             ${sideBar()} 
-            <div class="text-fg1 w-full p-12 flex gap-10 justify-center">
-                <form action="" class="w-200 flex flex-col gap-8">
-                    <div>
-                        <label for="">Title</label>
-                        <input type="" class="p-4 h-fit w-full border border-border bg-bg2 hover:bg-bg3/60 focus:border-fg5/60 transition-colors">
+            <div class="w-full p-12 flex gap-10 justify-center">
+                <div class="flex gap-8 flex-col">
+                    <div class="flex justify-between">
+                        <h1 class="text-fg1 font-medium">Create Post</h1>
+                        <button class="w-fit h-fit px-3 py-2 text-fg3 text-body-lg border border-border hover:bg-bg3 transition-colors">Pick a course</button>
                     </div>
-                    ${textEditor()}
-                    <div class="flex gap-4">
-                        <div class="flex flex-col gap-2 w-full">
-                            <label for="attachments">Attachments</label>
-                            <div class="bg-bg2 border border-dashed border-border hover:bg-bg3/60 focus:border-fg5/60 rounded-xs h-40 flex items-center justify-center relative transition-colors">
-                                <input type="file" id="attachments" class="absolute inset-0 opacity-0 cursor-pointer" multiple>
-                                <button type="button" class="w-10 h-10 flex items-center justify-center rounded-xs bg-bg-icon pointer-events-none">
-                                    <i data-lucide="paperclip" class="w-4 h-4 text-fg-icon"></i>
-                                </button>
+                    <form action="" class="w-200 flex flex-col gap-8">
+                        <div class="flex flex-col gap-2">
+                            <label for="" class="text-fg2">Title</label>
+                            <input type="" class="p-4 h-fit w-full border border-border bg-bg2 hover:bg-bg3/60 focus:border-fg5/60 transition-colors">
+                        </div>
+                        <div class="text-fg2 flex flex-col gap-2">
+                            <p>Video</p>
+                            <div class="border border-border relative w-full aspect-video bg-bg4 cursor-pointer hover:bg-bg5/80 transition-colors" data-video-id="4WfSohJ9K5o" data-yt-thumb>
+                                <img src="https://img.youtube.com/vi/4WfSohJ9K5o/maxresdefault.jpg" class="w-full h-full object-cover" />
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i data-lucide="play" class="w-12 h-12 text-fg2" fill="#e5e5e5"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2 w-full ">
-                            <label for="links">Links</label>
-                            <div class="bg-bg2 border border-dashed border-border hover:bg-bg3/60 focus:border-fg5/60 rounded-xs h-40 flex items-center justify-center relative transition-colors">
-                                <input type="url" id="links" class="absolute inset-0 opacity-0 cursor-pointer" placeholder="">
-                                <button type="button" class="w-10 h-10 flex items-center justify-center rounded-xs bg-bg-icon pointer-events-none">
-                                    <i data-lucide="link" class="w-4 h-4 text-fg-icon"></i>
-                                </button>
-                            </div>
+                        ${textEditor()}
+                        <div class="flex gap-2 w-full">
+                            <button class="w-full bg-bg3 text-fg2 border border-border py-3 rounded-xs hover:opacity-90 transition-all">Save Draft</button>
+                            <button class="w-full bg-fg2 text-bg3 border border-fg2 py-3 rounded-xs hover:opacity-90 transition-all">Post</button>
                         </div>
-                    </div>
-                    <div class="flex gap-2 w-full">
-                        <button class="w-full bg-bg3 text-fg2 border border-border py-3 rounded-xs hover:opacity-90 transition-all">Save Draft</button>
-                        <button class="w-full bg-fg2 text-bg3 border border-fg2 py-3 rounded-xs hover:opacity-90 transition-all">Post</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="flex flex-col gap-8">
+                    ${createLinks()}
+                    ${createAttachments()}
+                </div>
             </div>
         </div>
     `;

@@ -51,6 +51,10 @@
 	--text-title-md--line-height: normal;
 	--text-title-lg: 20px;
 	--text-title-lg--line-height: normal;
+
+	--text-heading-sm: 20px;
+	--text-heading-md: 22px;
+	--text-heading-lg: 24px;
 }
 
 @layer components {
@@ -67,7 +71,7 @@
 		@apply bg-white/10 text-fg1;
 	}
 	.toolbar-select {
-		@apply cursor-pointer bg-transparent text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors text-sm px-2 py-1 rounded-xs outline-none; 
+		@apply cursor-pointer bg-transparent text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors text-sm px-2 py-1 rounded-xs outline-none;
 	}
 	.editor-input:empty::before {
 		content: attr(data-placeholder);
@@ -76,41 +80,49 @@
 }
 
 @layer base {
-    * {
-        @apply font-poppins
-    }
+	* {
+		@apply font-poppins;
+	}
 
-    body {
-        @apply h-screen w-screen bg-bg1
-    }
+	body {
+		@apply h-screen w-screen bg-bg1;
+	}
 
-    input:focus,
-    input:focus-visible {
-      @apply outline-0;
-    }
+	input:focus,
+	input:focus-visible {
+		@apply outline-0;
+	}
 
-    button {
-        @apply cursor-pointer
-    }
+	button {
+		@apply cursor-pointer;
+	}
 
-    button:focus-visible {
-        @apply outline outline-fg4;
-    }
+	button:focus-visible {
+		@apply outline outline-fg4;
+	}
 
-    select:focus-visible {
-        @apply outline outline-fg4;
-    }
+	select:focus-visible {
+		@apply outline outline-fg4;
+	}
 
-    a:focus-visible {
-        @apply outline outline-fg4;
-    }
+	a:focus-visible {
+		@apply outline outline-fg4;
+	}
 
-    iframe {
-        @apply outline-none border-none
-    }
+	iframe {
+		@apply outline-none border-none;
+	}
 
-    ::selection {
-        @apply bg-fg1 text-bg2
-    }
-
+	::selection {
+		@apply bg-fg1 text-bg2;
+	}
+	h1 {
+		@apply text-heading-lg;
+	}
+	h2 {
+		@apply text-heading-md;
+	}
+	h3 {
+		@apply text-heading-sm;
+	}
 }

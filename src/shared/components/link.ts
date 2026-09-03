@@ -50,10 +50,10 @@ export function link() {
 
 export function youtubeLink() {
     return `
-        <div class="relative w-full aspect-video bg-bg4 cursor-pointer hover:bg-bg5/80 transition-colors" data-video-id="4WfSohJ9K5o" data-yt-thumb>
+        <div class="relative w-full aspect-video bg-bg4 cursor-pointer hover:bg-bg5/80 transition-colors border border-border" data-video-id="4WfSohJ9K5o" data-yt-thumb>
             <img src="https://img.youtube.com/vi/4WfSohJ9K5o/maxresdefault.jpg" class="w-full h-full object-cover" />
             <div class="absolute inset-0 flex items-center justify-center">
-                <i data-lucide="play" class="w-12 h-12 text-white"></i>
+                <i data-lucide="play" class="w-12 h-12 text-fg2" fill="#e5e5e5"></i>
             </div>
         </div>
     `

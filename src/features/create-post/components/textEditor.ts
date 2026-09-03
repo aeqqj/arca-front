@@ -36,7 +36,7 @@ const EDITOR_ID = "post-editor";
 export function textEditor(): string {
 	return `
     <div class="text-editor-wrapper w-full flex flex-col gap-2">
-      <p class="text-fg1">Description</p>
+      <p class="text-fg2">Description</p>
 
       <div class="border border-border rounded-xs overflow-hidden">
         <div class="toolbar flex items-center gap-1 px-3 py-2 border-b border-border flex-wrap bg-bg3">
@@ -92,7 +92,7 @@ export function textEditor(): string {
 
         <div
           id="${EDITOR_ID}"
-          class="editor-input min-h-50 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty text-body-md hover:bg-bg3/60 transition-colors"
+          class="editor-input min-h-60 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty text-body-md hover:bg-bg3/60 transition-colors"
           contenteditable="true"
           data-placeholder="Start typing here..."
         ></div>
@@ -258,7 +258,6 @@ export function initTextEditor(): LexicalEditor {
 		editor.focus();
 	});
 
-	// and toggle the empty-state placeholder.
 	editor.registerUpdateListener(({ editorState }) => {
 		editorState.read(() => {
 			const rootNode = $getRoot();
@@ -288,10 +287,6 @@ export function getTextEditor(): LexicalEditor | null {
 	return editorInstance;
 }
 
-/**
- * Returns the editor content as HTML, preserving bold/italic/headings/
- * all formatting.
- */
 export function getEditorHtmlContent(): string {
 	if (!editorInstance) return "";
 	return editorInstance
@@ -299,7 +294,6 @@ export function getEditorHtmlContent(): string {
 		.read(() => $generateHtmlFromNodes(editorInstance!, null));
 }
 
-/** Plain-text fallback, kept for cases where you genuinely just want text. */
 export function getEditorTextContent(): string {
 	if (!editorInstance) return "";
 	return editorInstance
