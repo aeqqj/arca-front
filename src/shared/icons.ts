@@ -29,6 +29,8 @@ import {
 	AlignLeft,
 	Undo2,
 	Redo2,
+    Paperclip,
+    Link,
 } from "lucide";
 
 export function initIcons() {
@@ -63,6 +65,8 @@ export function initIcons() {
 			AlignLeft,
 			Undo2,
 			Redo2,
+            Paperclip,
+            Link,
 		},
 	});
 }

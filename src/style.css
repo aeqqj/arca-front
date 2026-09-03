@@ -75,24 +75,42 @@
 	}
 }
 
-* {
-	font-family: var(--font-poppins);
-}
-body {
-	height: 100vh;
-	width: 100vw;
-	background-color: var(--color-bg1);
-}
+@layer base {
+    * {
+        @apply font-poppins
+    }
 
-input {
-	outline: none;
-}
+    body {
+        @apply h-screen w-screen bg-bg1
+    }
 
-button {
-	cursor: pointer;
-}
+    input:focus,
+    input:focus-visible {
+      @apply outline-0;
+    }
 
-iframe {
-	outline: none;
-	border: none;
+    button {
+        @apply cursor-pointer
+    }
+
+    button:focus-visible {
+        @apply outline outline-fg4;
+    }
+
+    select:focus-visible {
+        @apply outline outline-fg4;
+    }
+
+    a:focus-visible {
+        @apply outline outline-fg4;
+    }
+
+    iframe {
+        @apply outline-none border-none
+    }
+
+    ::selection {
+        @apply bg-fg1 text-bg2
+    }
+
 }
