@@ -9,7 +9,7 @@ export function extractYoutubeId(url: string): string | null {
 
 export function githubLink() {
     return `
-        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 hover:bg-bg5/80 transition-colors">
+        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 hover:bg-bg5/80 transition-colors cursor-pointer">
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <img src="${github}" class="w-5 h-5"/>
             </div>
@@ -36,7 +36,7 @@ export function githubLink() {
 
 export function link() {
     return `
-        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 items-center hover:bg-bg5/80 transition-colors">
+        <div class="w-full h-fit border border-border bg-bg4 p-4 flex gap-2 items-center hover:bg-bg5/80 transition-colors cursor-pointer">
             <div class="w-fit h-fit p-2.5 bg-bg-icon">
                 <i data-lucide="link2" class="w-4 h-4 text-fg-icon"></i> 
             </div>

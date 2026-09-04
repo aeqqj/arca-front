@@ -5,7 +5,7 @@ import { attachment } from "../../../shared/components/attachment.ts";
 export function fullPost() {
 	return `
         <div class="w-fit flex gap-5 items-start">
-            <div class="flex flex-col gap-4 sticky top-20 self-start">
+            <div class="flex flex-col gap-4 sticky top-0 self-start">
                 <button class="w-fit h-fit p-2.5 bg-bg3 border border-border rounded-xs hover:bg-bg4 transition-colors">
                     <i data-lucide="arrow-left" class="w-5 h-5 text-fg3"></i> 
                 </button>
@@ -22,7 +22,7 @@ export function fullPost() {
                 </button>
             </div>
             <div class="w-4xl flex flex-col gap-4">
-                <div class="w-full h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs hover:bg-bg3/60 transition-colors cursor-pointer shadow-md">
+                <div class="w-full h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs hover:bg-bg3/60 transition-colors shadow-md">
                     <div class="flex flex-col gap-4">
                         <div class="flex gap-4">
                             <img src="${avatarPlaceholder}" class="w-12 h-12 rounded-xs mt-1" />

@@ -9,22 +9,25 @@ import { bindYoutubeLinks } from "../../shared/handlers/youtubeHandler.ts";
 export function HomePage() {
 	const app = document.querySelector<HTMLDivElement>("#app")!;
 	document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-        ${header()}
-        <div class="w-full flex">
-            ${sideBar()} 
-            <div class="w-full px-12 py-8 flex gap-10 justify-center">
-                <div class="flex flex-col gap-6">
-                    ${post()}
-                    ${post()}
-                </div>
-                <div class="flex flex-col gap-8">
-                    ${announcements()}
-                    ${trending()}
+        <div class="h-full flex flex-col">
+            ${header()}
+            <div class="w-full flex items-start flex-1 min-h-0">
+                <aside class="h-full overflow-y-auto shrink-0">
+                    ${sideBar()}
+                </aside>
+                <div class="w-full h-full px-12 py-8 flex gap-10 justify-center overflow-y-auto">
+                    <div class="flex flex-col gap-6">
+                        ${post()}
+                        ${post()}
+                    </div>
+                    <div class="flex flex-col gap-8 sticky top-0 self-start">
+                        ${announcements()}
+                        ${trending()}
+                    </div>
                 </div>
             </div>
         </div>
     `;
-
     initIcons();
     bindYoutubeLinks(app);
 }

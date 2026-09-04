@@ -130,3 +130,7 @@
 		@apply text-heading-xs;
 	}
 }
+
+html, body {
+    overflow: hidden;
+}

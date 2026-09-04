@@ -2,7 +2,7 @@ import avatarPlaceholder from "/dog.png";
 
 export function header() {
 	return `
-        <header class="h-fit px-6 py-1 flex items-center justify-between border-b border-border bg-bg1 sticky top-0 z-50">
+        <header class="h-16 px-6 py-1 flex items-center justify-between border-b border-border bg-bg1 sticky top-0 z-50">
             <a href="/" class="text-2xl font-bold text-fg1 cursor-pointer">arca</a>
             <div class="w-2xl px-3 py-2.5 flex items-center gap-4 bg-bg4 border-border rounded-xs hover:bg-bg5 transition-colors">
                 <i data-lucide="search" class="w-5 h-5 text-fg4"></i> 
