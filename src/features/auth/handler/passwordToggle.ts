@@ -9,8 +9,8 @@ export function passwordToggle() {
         passwordInput.type = isPassword ? "text" : "password";
 
         toggleBtn.innerHTML = isPassword
-            ? '<i data-lucide="eye-closed" class="w-5 h-5"></i>'
-            : '<i data-lucide="eye" class="w-5 h-5"></i>';
+            ? '<i data-lucide="eye" class="w-5 h-5 text-fg4 hover:text-fg2 transition-colors"></i>'
+            : '<i data-lucide="eye-closed" class="w-5 h-5 text-fg4 hover:text-fg2 transition-colors"></i>';
 
         initIcons();
     })

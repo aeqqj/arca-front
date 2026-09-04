@@ -60,7 +60,7 @@
 
 @layer components {
 	.auth-input {
-		@apply bg-bg3 px-5 py-3.5 border border-border rounded-xs text-sm text-fg-placeholder;
+		@apply bg-bg2 px-5 py-3.5 border border-border rounded-xs text-sm text-fg-placeholder transition-colors focus:border-fg5/60 hover:bg-bg3/60;
 	}
 	.link {
 		@apply hover:text-fg-link transition-colors;
