@@ -1,17 +1,29 @@
 import { initIcons } from "../../shared/icons.ts";
 import { passwordToggle } from "./handler/passwordToggle.ts";
+import { signUp } from "../../core/auth/session.ts";
+import { navigate } from "../../core/router/router.ts";
+import { nextRenderToken, paint, isCurrentRender } from "../../core/render.ts";
 
 export function SignUpPage() {
-    document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+	const token = nextRenderToken();
+	paint(
+		token,
+		`
         <section class="flex-1 flex justify-center items-center select-none text-foreground0 text-fg1">
             <div class="w-94 flex flex-col gap-6">
                 <div class="flex items-baseline gap-4">
                     <h3 class="font-semibold text-shadow-lg text-6xl">sign up</h3>
                 </div>
-                <form action="" class="flex flex-col gap-6">
-                    <div class="flex flex-col gap-1">
-                        <label for="email" class="text-body-lg text-fg2">Name</label>
-                        <input type="email" id="email" placeholder="Enter your Name" class="auth-input text-fg2">
+                <form id="signup-form" action="" class="flex flex-col gap-6">
+                    <div class="flex gap-4">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="firstName" class="text-body-lg text-fg2">First name</label>
+                            <input type="text" id="firstName" placeholder="First name" class="auth-input text-fg2">
+                        </div>
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="lastName" class="text-body-lg text-fg2">Last name</label>
+                            <input type="text" id="lastName" placeholder="Last name" class="auth-input text-fg2">
+                        </div>
                     </div>
                     <div class="flex flex-col gap-1">
                         <label for="email" class="text-body-lg text-fg2">Email</label>
@@ -26,14 +38,69 @@ export function SignUpPage() {
                             </button>
                         </div>
                     </div>
+                    <p id="auth-error" class="text-bad text-sm hidden"></p>
                     <div class="flex flex-col gap-2">
-                        <button class="px-5 py-3 bg-foreground0 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">sign in</button>
-                        <p class="w-full text-center text-fg4 text-sm">Already have an account? <a href="/auth/signin" class="underline hover:text-fg2 transition-colors">Sign in </a></p>
+                        <button id="signup-submit" class="px-5 py-3 bg-foreground0 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">Sign up</button>
+                        <p class="w-full text-center text-fg4 text-sm">Already have an account? <a href="/auth/signin" class="underline hover:text-fg2 transition-colors">Sign in</a></p>
                     </div>
                 </form>
             </div>
         </section>
-    `;
-    initIcons();
-    passwordToggle();
-};
+    `,
+	);
+	initIcons();
+	passwordToggle();
+
+	const form = document.querySelector<HTMLFormElement>("#signup-form")!;
+	form.addEventListener("submit", (e) => {
+		e.preventDefault();
+		const firstName = document
+			.querySelector<HTMLInputElement>("#firstName")!
+			.value.trim();
+		const lastName = document
+			.querySelector<HTMLInputElement>("#lastName")!
+			.value.trim();
+		const email = document
+			.querySelector<HTMLInputElement>("#email")!
+			.value.trim();
+		const password =
+			document.querySelector<HTMLInputElement>("#password")!.value;
+		const errorEl =
+			document.querySelector<HTMLParagraphElement>("#auth-error")!;
+		const submitBtn =
+			document.querySelector<HTMLButtonElement>("#signup-submit")!;
+
+		if (!firstName.trim() && !lastName.trim()) {
+			errorEl.textContent = "Please enter your first or last name.";
+			errorEl.classList.remove("hidden");
+			return;
+		}
+		if (!email || !password) {
+			errorEl.textContent = "Email and password are required.";
+			errorEl.classList.remove("hidden");
+			return;
+		}
+
+		errorEl.classList.add("hidden");
+		submitBtn.disabled = true;
+		submitBtn.textContent = "Creating account…";
+
+		void signUp({
+			first_name: firstName,
+			last_name: lastName,
+			email,
+			password,
+		})
+			.then(() => navigate("/"))
+			.catch((err: unknown) => {
+				if (!isCurrentRender(token)) {
+					return;
+				}
+				submitBtn.disabled = false;
+				submitBtn.textContent = "Sign up";
+				errorEl.textContent =
+					err instanceof Error ? err.message : "Sign up failed";
+				errorEl.classList.remove("hidden");
+			});
+	});
+}

@@ -1,53 +1,59 @@
 import avatarPlaceholder from "/dog.png";
-import { link, githubLink, youtubeLink } from "./link.ts";
-import { attachment } from "./attachment.ts";
+import type { PostResponse } from "../../core/api/types.ts";
+import { esc, htmlToText, timeAgo } from "../../core/render.ts";
 
-export function post() {
+export function post(p: PostResponse) {
+	const author =
+		[p.first_name, p.last_name].filter(Boolean).join(" ") ||
+		`user ${p.user_id}`;
+	const preview = htmlToText(p.content);
+	const tag = p.post_tag || p.department_name;
+	const upvotes = p.upvote_count ?? 0;
+	const fileCount = p.files?.length ?? 0;
+
 	return `
-        <div class="w-200 h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs hover:bg-bg3/60 transition-colors cursor-pointer shadow-md">
+        <a href="/post?id=${p.id}" class="w-200 h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs hover:bg-bg3/60 transition-colors cursor-pointer shadow-md">
             <div class="flex gap-4">
                 <img src="${avatarPlaceholder}" class="w-12 h-12 rounded-xs mt-1" />
                 <div class="w-full flex flex-col">
                     <div class="w-full flex justify-between items-center">
                         <div class="flex text-label-md items-center">
-                            <a href="/" class="text-fg4 hover:text-fg-link transition-colors">retardedmoron69</a>
-                            <p class="text-fg5">&nbsp; • 15 hours</p>
+                            <span class="text-fg4">${esc(author)}</span>
+                            <p class="text-fg5">&nbsp; • ${esc(timeAgo(p.updated_at ?? p.created_at))}</p>
                         </div>
                         <div class="p-1 hover:bg-bg5/60 transition-colors rounded-xs">
                             <i data-lucide="ellipsis" class="w-4 h-4 text-fg3"></i>
                         </div>
                     </div>
                     <p class="text-fg2 text-title-sm font-medium">
-                        google made btrees in golang instead of c and so should you go is good its better than everything
+                        ${esc(p.title)}
                     </p>
                 </div>
             </div>
-            <p class="text-fg3 text-body-md"> go is GOOD use GO, check this shit out</p>
-
-            ${youtubeLink()}
-
-            ${githubLink()}
-
-            ${link()}
-
-            <div class="flex gap-3.5">
-                ${attachment()}
-                ${attachment()}
-            </div>
-
+            ${preview ? `<p class="text-fg3 text-body-md">${esc(preview)}</p>` : ""}
+            ${
+				fileCount > 0
+					? `<div class="flex items-center gap-2 text-fg5 text-sm">
+                                    <i data-lucide="paperclip" class="w-4 h-4"></i>
+                                    <p>${fileCount} attachment${fileCount === 1 ? "" : "s"}</p>
+                                </div>`
+					: ""
+			}
             <div class="flex items-center justify-between">
                 <div class="flex gap-4">
                     <div class="w-fit h-fit flex gap-6 bg-bg3 text-fg3 px-2.5 py-2 border border-border rounded-xs items-center">
                         <i data-lucide="arrow-up" class="w-5 h-5 hover:text-good transition-colors"></i> 
-                        <p>22</p>
+                        <p>${upvotes}</p>
                         <i data-lucide="arrow-down" class="w-5 h-5 hover:text-bad transition-colors"></i> 
-                    </div>
-                    <div class="w-fit h-fit p-3 bg-bg3 border border-border rounded-xs hover:bg-bg4 transition-colors">
-                        <i data-lucide="square-arrow-out-up-right" class="w-4 h-4 text-fg3"></i> 
+                        <p>${p.downvote_count ?? 0}</p>
                     </div>
                 </div>
-                <div class="w-fit h-fit py-1 px-4 bg-red-100 text-bg2 rounded-xs text-sm">Data Structures & Algorithms</div>
+                ${
+					tag
+						? `<div class="w-fit h-fit py-1 px-4 bg-red-100 text-bg2 rounded-xs text-sm">${esc(tag)}</div>`
+						: ""
+				}
             </div>
-        </div>
+        </a>
     `;
 }

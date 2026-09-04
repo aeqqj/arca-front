@@ -1,7 +1,16 @@
 import avatar from "/dog.png";
 import cover from "/frieren.png";
+import type { PostResponse, User } from "../../../core/api/types.ts";
+import { displayName } from "../../../core/auth/session.ts";
+import { esc } from "../../../core/render.ts";
 
-export function profile() {
+export function profile(user: User, posts: PostResponse[]) {
+	const upvotesReceived = posts.reduce(
+		(sum, p) => sum + (p.upvote_count ?? 0),
+		0,
+	);
+	const headline = user.course ? `${user.course}` : "";
+
 	return `
     <div class="w-200"> 
         <div class="relative">
@@ -13,18 +22,18 @@ export function profile() {
                 <button class="h-fit py-2 px-4 border bg-bg2 border-border text-body-md">Edit Profile</button>
             </div>
             <div class="flex flex-col"> 
-                <p class="font-medium text-title-lg">retardedmoron69</p>
-                <p class="font-medium text-body-lg text-fg5">BSCS - 2</p>
+                <p class="font-medium text-title-lg">${esc(displayName(user))}</p>
+                ${headline ? `<p class="font-medium text-body-lg text-fg5">${esc(headline)}</p>` : ""}
             </div>
             <div class="flex flex-col gap-3">
-                <p class="text-fg3">
-                    something something cool bio something something very cool bio :DD
-                    if u're looking at this u're a loseeeeer. XDDDDDDDDDD
-                </p>
+                ${
+					user.bio
+						? `<p class="text-fg3 whitespace-pre-line">${esc(user.bio)}</p>`
+						: ""
+				}
                 <div class="flex gap-4 text-fg5 text-body-md">
-                    <p>3 posts</p>
-                    <p>121 upvotes received</p>
-                    <p>Joined August 2025</p>
+                    <p>${posts.length} post${posts.length === 1 ? "" : "s"}</p>
+                    <p>${upvotesReceived} upvote${upvotesReceived === 1 ? "" : "s"} received</p>
                 </div>
             </div>
         </div>

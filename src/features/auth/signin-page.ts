@@ -1,14 +1,20 @@
 import { initIcons } from "../../shared/icons.ts";
 import { passwordToggle } from "./handler/passwordToggle.ts";
+import { signIn } from "../../core/auth/session.ts";
+import { navigate } from "../../core/router/router.ts";
+import { nextRenderToken, paint, isCurrentRender } from "../../core/render.ts";
 
 export function SignInPage() {
-    document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+	const token = nextRenderToken();
+	paint(
+		token,
+		`
         <section class="flex-1 flex justify-center items-center select-none text-foreground0 text-fg1">
             <div class="w-94 flex flex-col gap-6">
                 <div class="flex items-baseline gap-4">
                     <h3 class="font-semibold text-shadow-lg text-6xl">sign in</h3>
                 </div>
-                <form action="" class="flex flex-col gap-6">
+                <form id="signin-form" action="" class="flex flex-col gap-6">
                     <div class="flex flex-col gap-1">
                         <label for="email" class="text-body-lg text-fg2">Email</label>
                         <input type="email" id="email" placeholder="Enter your email" class="auth-input text-fg2">
@@ -23,13 +29,47 @@ export function SignInPage() {
                                 </button>
                             </div>
                         </div>
-                        <button class="w-full text-end text-fg4 text-sm hover:text-fg2 transition-colors">Forgot Password?</button>
+                        <button type="button" class="w-full text-end text-fg4 text-sm hover:text-fg2 transition-colors">Forgot Password?</button>
                     </div>
-                    <button class="px-5 py-3 bg-foreground0 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">Sign In</button>
+                    <p id="auth-error" class="text-bad text-sm hidden"></p>
+                    <button id="signin-submit" class="px-5 py-3 bg-foreground0 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">Sign In</button>
+                    <p class="w-full text-center text-fg4 text-sm">No account? <a href="/auth/signup" class="underline hover:text-fg2 transition-colors">Sign up</a></p>
                 </form>
             </div>
         </section>
-    `;
-    initIcons();
-    passwordToggle();
+    `,
+	);
+	initIcons();
+	passwordToggle();
+
+	const form = document.querySelector<HTMLFormElement>("#signin-form")!;
+	form.addEventListener("submit", (e) => {
+		e.preventDefault();
+		const email = document
+			.querySelector<HTMLInputElement>("#email")!
+			.value.trim();
+		const password =
+			document.querySelector<HTMLInputElement>("#password")!.value;
+		const errorEl =
+			document.querySelector<HTMLParagraphElement>("#auth-error")!;
+		const submitBtn =
+			document.querySelector<HTMLButtonElement>("#signin-submit")!;
+
+		errorEl.classList.add("hidden");
+		submitBtn.disabled = true;
+		submitBtn.textContent = "Signing in…";
+
+		void signIn(email, password)
+			.then(() => navigate("/"))
+			.catch((err: unknown) => {
+				if (!isCurrentRender(token)) {
+					return;
+				}
+				submitBtn.disabled = false;
+				submitBtn.textContent = "Sign In";
+				errorEl.textContent =
+					err instanceof Error ? err.message : "Sign in failed";
+				errorEl.classList.remove("hidden");
+			});
+	});
 }
