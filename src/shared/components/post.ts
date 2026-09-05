@@ -1,8 +1,8 @@
 import avatarPlaceholder from "/dog.png";
-import type { PostResponse } from "../../core/api/types.ts";
+import type { PostResponse, VoteType } from "../../core/api/types.ts";
 import { esc, htmlToText, timeAgo } from "../../core/render.ts";
 
-export function post(p: PostResponse) {
+export function post(p: PostResponse, myVote?: VoteType | null) {
 	const author =
 		[p.first_name, p.last_name].filter(Boolean).join(" ") ||
 		`user ${p.user_id}`;
@@ -41,11 +41,11 @@ export function post(p: PostResponse) {
 			}
             <div class="flex items-center justify-between">
                 <div class="flex gap-4">
-                    <div class="w-fit h-fit flex gap-6 bg-bg3 text-fg3 px-2.5 py-2 border border-border rounded-xs items-center">
-                        <i data-lucide="arrow-up" class="w-5 h-5 hover:text-good transition-colors"></i> 
-                        <p>${upvotes}</p>
-                        <i data-lucide="arrow-down" class="w-5 h-5 hover:text-bad transition-colors"></i> 
-                        <p>${p.downvote_count ?? 0}</p>
+                    <div class="w-fit h-fit flex gap-6 bg-bg3 text-fg3 px-2.5 py-2 border border-border rounded-xs items-center" data-post-id="${p.id}">
+                        <span data-vote="UPVOTE" class="cursor-pointer hover:text-good transition-colors ${myVote === "UPVOTE" ? "text-good" : ""}"><i data-lucide="arrow-up" class="w-5 h-5"></i></span> 
+                        <p data-count="up">${upvotes}</p>
+                        <span data-vote="DOWNVOTE" class="cursor-pointer hover:text-bad transition-colors ${myVote === "DOWNVOTE" ? "text-bad" : ""}"><i data-lucide="arrow-down" class="w-5 h-5"></i></span> 
+                        <p data-count="down">${p.downvote_count ?? 0}</p>
                     </div>
                 </div>
                 ${

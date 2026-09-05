@@ -2,7 +2,9 @@
 // layers the "who am I" cache on top and exposes login/logout flows.
 
 import * as endpoints from "../api/endpoints.ts";
+import { clearCache } from "../api/cache.ts";
 import { clearTokens, getAccessToken, setTokens } from "../api/client.ts";
+import { clearRememberedVotes } from "../votes.ts";
 import type { RegisterPayload, User } from "../api/types.ts";
 
 const USER_KEY = "arca_session_user";
@@ -29,6 +31,8 @@ function saveUser(user: User): void {
 
 export function clearSession(): void {
 	clearTokens();
+	clearCache();
+	clearRememberedVotes();
 	localStorage.removeItem(USER_KEY);
 }
 
@@ -46,6 +50,9 @@ async function resolveAndCacheUser(email: string): Promise<void> {
 
 export async function signIn(email: string, password: string): Promise<void> {
 	const auth = await endpoints.login(email, password);
+	// New identity => drop anything the previous session may have cached.
+	clearCache();
+	clearRememberedVotes();
 	setTokens(auth.access_token, auth.refresh_token);
 	await resolveAndCacheUser(auth.email || email);
 }

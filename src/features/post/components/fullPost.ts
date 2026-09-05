@@ -2,8 +2,9 @@ import avatarPlaceholder from "/dog.png";
 import type { PostResponse } from "../../../core/api/types.ts";
 import { esc, timeAgo } from "../../../core/render.ts";
 import { attachment } from "../../../shared/components/attachment.ts";
+import type { VoteType } from "../../../core/api/types.ts";
 
-export function fullPost(p: PostResponse) {
+export function fullPost(p: PostResponse, myVote?: VoteType | null) {
 	const author =
 		[p.first_name, p.last_name].filter(Boolean).join(" ") ||
 		`user ${p.user_id}`;
@@ -19,11 +20,11 @@ export function fullPost(p: PostResponse) {
                 <a href="/" class="w-fit h-fit p-2.5 bg-bg3 border border-border rounded-xs hover:bg-bg4 transition-colors">
                     <i data-lucide="arrow-left" class="w-5 h-5 text-fg3"></i> 
                 </a>
-                <div class="w-fit h-fit flex flex-col gap-6 bg-bg3 text-fg3 mt-6 px-2.5 py-2 border border-border rounded-xs items-center">
-                    <i data-lucide="arrow-up" class="w-5 h-5 hover:text-good transition-colors mt-2"></i> 
-                    <p>${p.upvote_count ?? 0}</p>
-                    <i data-lucide="arrow-down" class="w-5 h-5 hover:text-bad transition-colors mb-2"></i> 
-                    <p>${p.downvote_count ?? 0}</p>
+                <div class="w-fit h-fit flex flex-col gap-6 bg-bg3 text-fg3 mt-6 px-2.5 py-2 border border-border rounded-xs items-center" data-post-id="${p.id}">
+                    <span data-vote="UPVOTE" class="cursor-pointer hover:text-good transition-colors ${myVote === "UPVOTE" ? "text-good" : ""}"><i data-lucide="arrow-up" class="w-5 h-5"></i></span> 
+                    <p data-count="up">${p.upvote_count ?? 0}</p>
+                    <span data-vote="DOWNVOTE" class="cursor-pointer hover:text-bad transition-colors ${myVote === "DOWNVOTE" ? "text-bad" : ""}"><i data-lucide="arrow-down" class="w-5 h-5"></i></span> 
+                    <p data-count="down">${p.downvote_count ?? 0}</p>
                 </div>
                 <button class="w-fit h-fit p-3 bg-bg3 border border-border rounded-xs hover:bg-bg4 transition-colors">
                     <i data-lucide="square-arrow-out-up-right" class="w-4 h-4 text-fg3"></i> 

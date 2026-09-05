@@ -2,6 +2,9 @@ import { routes, publicRoutes } from "./routes.ts";
 import { isAuthenticated } from "../auth/session.ts";
 
 document.addEventListener("click", (e) => {
+	if (e.defaultPrevented) {
+		return; // already handled (e.g. vote arrows cancel their clicks)
+	}
 	const anchor = (e.target as Element).closest?.(
 		"a[href^='/']",
 	) as HTMLAnchorElement | null;

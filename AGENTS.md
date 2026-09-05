@@ -13,8 +13,10 @@
   frontend-driven backend edits were all reverted at the user's request).
   The frontend must work against the API exactly as it exists.
 - Dev server: port **20255**, JWT bearer auth, Jackson **SNAKE_CASE** JSON.
-  Vite proxies `/api` → `http://localhost:20255` (`vite.config.ts`), so the app
-  calls same-origin paths only.
+- A deployed instance runs at **https://arca-backend.dcism.org/** (same app; Swagger at
+  `/swagger-ui/index.html`). Its CORS allows `http://localhost:5173` and `https://arca.dcism.org`.
+  Local dev currently targets it via `VITE_API_BASE_URL` in `.env` (gitignored); with the
+  variable unset, the Vite proxy sends `/api` → `http://localhost:20255` instead.
 
 ## Frontend rules that came out of the plan
 

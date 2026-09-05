@@ -52,7 +52,7 @@ export async function CreatePostPage() {
             ${header(getCurrentUser())}
             <div class="w-full flex items-start flex-1 min-h-0">
                 <aside class="h-full overflow-y-auto shrink-0">
-                    ${sideBar()}
+                    ${sideBar(subjects)}
                 </aside>
                 <div class="w-full h-full px-12 py-8 flex gap-10 justify-center overflow-y-auto">
                     <div class="flex gap-4 flex-col">

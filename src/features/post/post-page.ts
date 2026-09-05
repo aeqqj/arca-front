@@ -3,8 +3,15 @@ import { header, bindHeader } from "../../shared/components/header.ts";
 import { fullPost } from "./components/fullPost.ts";
 import { profileExtra } from "./components/profileExtra.ts";
 import { miniProfile } from "./components/miniProfile.ts";
-import { downloadFile, getPost } from "../../core/api/endpoints.ts";
-import type { PostResponse } from "../../core/api/types.ts";
+import { ensureVotesBound } from "../../shared/handlers/voteHandler.ts";
+import {
+	downloadFile,
+	getMyVote,
+	getPost,
+	getUserById,
+	getUserPosts,
+} from "../../core/api/endpoints.ts";
+import type { PostResponse, User } from "../../core/api/types.ts";
 import { getCurrentUser } from "../../core/auth/session.ts";
 import {
 	errorPanel,
@@ -21,19 +28,28 @@ export async function PostPage() {
 	const id = Number(new URLSearchParams(window.location.search).get("id"));
 
 	let post: PostResponse | null = null;
+	let author: User | null = null;
+	let authorPosts: PostResponse[] = [];
+	let myVote: Awaited<ReturnType<typeof getMyVote>>;
 	let error = "";
 	if (!Number.isInteger(id) || id <= 0) {
 		error = "Missing or invalid post id.";
 	} else {
 		try {
 			post = await getPost(id);
+			// Author sidebar context; a failure here must not hide the post.
+			[author, authorPosts, myVote] = await Promise.all([
+				getUserById(post.user_id).catch(() => null),
+				getUserPosts(post.user_id).catch(() => [] as PostResponse[]),
+				getMyVote(post.id).catch(() => undefined),
+			]);
 		} catch (e) {
 			error = e instanceof Error ? e.message : "Failed to load post";
 		}
 	}
 
 	const content = post
-		? fullPost(post)
+		? fullPost(post, myVote?.vote_type ?? null)
 		: errorPanel("Post not found", error || undefined);
 
 	const painted = paint(
@@ -46,8 +62,8 @@ export async function PostPage() {
                     ${content}
                 </div>
                 <div class="flex flex-col gap-8 self-start sticky top-0">
-                    ${miniProfile()}
-                    ${profileExtra()}
+                    ${miniProfile(author)}
+                    ${profileExtra(author, authorPosts, post?.id)}
                 </div>
             </div>
         </div>
@@ -58,6 +74,7 @@ export async function PostPage() {
 	}
 	initIcons();
 	bindHeader();
+	ensureVotesBound();
 
 	// The download endpoint requires the Authorization header, which plain
 	// <a href> cannot send — fetch each file as an authenticated blob.

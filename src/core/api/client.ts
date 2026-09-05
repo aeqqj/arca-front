@@ -2,6 +2,8 @@
 // on 401, and normalized ApiError. All HTTP in the app goes through here.
 
 import { API_BASE } from "../config.ts";
+import { clearRememberedVotes } from "../votes.ts";
+import { clearCache } from "./cache.ts";
 import type { AuthResponse } from "./types.ts";
 
 const ACCESS_KEY = "arca_access_token";
@@ -104,6 +106,8 @@ function tryRefresh(): Promise<boolean> {
 
 function forceSignedOut(): void {
 	clearTokens();
+	clearCache();
+	clearRememberedVotes();
 	localStorage.removeItem("arca_session_user");
 	if (!window.location.pathname.startsWith("/auth/")) {
 		window.location.assign("/auth/signin");

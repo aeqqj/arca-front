@@ -108,3 +108,12 @@ export interface SubjectResponse {
 	aliases?: string[];
 	departments?: DepartmentResponse[];
 }
+
+export type VoteType = "UPVOTE" | "DOWNVOTE";
+
+export interface VoteResponse {
+	id: number;
+	post_id: number;
+	user_id: number;
+	vote_type: VoteType;
+}
