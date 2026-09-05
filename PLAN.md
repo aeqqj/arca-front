@@ -11,13 +11,16 @@
   everything previously proposed there. All wiring must work against the _existing_ API.
 - **Departments are deprecated** in the frontend UI. They still exist in the post schema,
   so the frontend sends fixed defaults: `DEFAULT_DEPARTMENT_ID = 1`, `DEFAULT_SCHOOL_ID = 1`
-  (see `src/core/config.ts`, env-overridable).
+  (see `src/core/config.ts`, env-overridable). **Per the user (2026-09-05): department row 1
+  _is_ DCISM — permanent by design (table kept for future scalability), so these defaults are
+  intentional, not hacks to remove.** Backend still needs `GET /posts/subject/{id}` eventually
+  (see `BACKEND_PLAN.md` #12), but the department id itself stays.
 - Scope = **core flows only**: sign in / sign up / logout, home feed, post detail, profile,
   create post (+ attachments). Votes, bookmarks/vault, announcements, trending, search,
   admin, and the sidebar course list stay **unwired mock UI**.
 - No new npm dependencies. Keep the vanilla-TS + innerHTML-template style.
 - Dev transport: Vite `server.proxy` `/api` → `http://localhost:20255` (no CORS concerns).
-  A deployed backend also exists at **https://arca-backend.dcism.org/** — currently in use
+  A deployed backend also exists at **<https://arca-backend.dcism.org/>** — currently in use
   via `VITE_API_BASE_URL` in `.env` (its CORS permits `localhost:5173`).
 
 ## API facts (verified against the code, 2026-09-05)

@@ -7,6 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+#.md's
+PLAN.md
+AGENTS.md
+
 node_modules
 dist
 dist-ssr
@@ -25,3 +29,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+

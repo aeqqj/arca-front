@@ -1,14 +1,18 @@
 # Backend Work Plan — arca API
 
 **For:** arca backend (`/home/charles/dev/arca`, Spring Boot; deployed at `https://arca-backend.dcism.org`)
-**From:** frontend (`arca-front`) — 2026-09-05
-**Basis:** read-only audit of backend source + live OpenAPI at `/v3/api-docs`. The frontend never modifies the backend; this document is the request list.
+**From:** frontend (`arca-front`) — drafted 2026-09-05, **full second pass 2026-09-06**
+**Basis:** read-only re-audit of backend source (all controllers/services/entities/config) +
+live OpenAPI at `https://arca-backend.dcism.org/v3/api-docs`. The frontend never modifies the
+backend; this document is the request list.
+Items marked **(NEW)** were found or live-verified in the 2026-09-06 pass.
 
 Legend:
 
 - **BLOCKED-IN** — a frontend workaround exists today and is fragile; fixing this deletes the hack.
-- **MOCK** — frontend UI is static/placeholder because no endpoint exists.
-- All endpoint names assume the existing conventions: JWT bearer auth, Jackson **SNAKE_CASE** on the wire, `/api/v1` prefix.
+- **MOCK** — frontend UI is static/placeholder because no usable endpoint exists.
+- All endpoint names assume the existing conventions: JWT bearer auth, Jackson **SNAKE_CASE**
+  on the wire (re-confirmed: `spring.jackson.property-naming-strategy=SNAKE_CASE`), `/api/v1` prefix.
 
 ---
 
@@ -16,128 +20,209 @@ Legend:
 
 ### 1. BCrypt password hash exposed on user reads — _BLOCKED-IN_
 
-- `entity/User.java`: `password` has no `@JsonIgnore`; `UserController` returns the raw entity on `GET /api/v1/user` (`List<User>`) and `GET /api/v1/user/{userId}` (`User`).
-- Impact: any authenticated user can harvest every user's password hash.
-- Fix: return a sanitized `UserResponse` DTO (`id, first_name, last_name, email, course, department, bio, profile_picture, roles`) or `@JsonIgnore` the field.
+- `entity/User.java` has no `@JsonIgnore` on `password`; `UserController` returns the raw entity
+  on `GET /api/v1/user` (`List<User>`) and `GET /api/v1/user/{userId}`.
+- **Live-verified 2026-09-06:** the deployed `/v3/api-docs` `User` schema contains
+  `password`, `deleted`, `deleted_at` alongside every user's `email` — any ROLE_USER can harvest all hashes.
+- Fix: sanitized `UserResponse` DTO (`id, first_name, last_name, email, course, department, bio,
+profile_picture, roles`) or `@JsonIgnore` on `password` (+ hide `deleted*`). Also restrict the
+  full `GET /user` list to ADMIN (see #8 for why the frontend calls it today).
 
 ### 2. Post/file author is client-supplied (impersonation)
 
-- `dto/v1/post/PostRequest.userId` is taken from the request body → any signed-in user can create/act on posts as anyone.
-- `FileController.uploadV1` takes `@RequestParam("user_id")` → files can be attributed to any user.
-- Fix: derive the actor from `@AuthenticationPrincipal` — already done correctly in `VoteController.createOrUpdateVoteV1` — and ignore/reject body user ids.
+- `dto/v1/post/PostRequest.userId` is taken from the body → any signed-in user can create posts as anyone.
+- `FileController.uploadFile` takes `@RequestParam("user_id")` → files attributed to any user.
+- Fix: derive the actor from `@AuthenticationPrincipal` — already done correctly in
+  `VoteController`/`VaultController` — and ignore/reject body/param user ids.
+
+### 3. (NEW) Privilege escalation + account takeover via `PUT /api/v1/user/{userId}`
+
+- `UserController.updateUser` accepts the **raw `User` entity** (including `roles`, `password`,
+  `email`) and only force-sets the path id. No ownership check.
+  → any authenticated user can PUT `/user/<their own id>` with `{"roles":["ROLE_ADMIN"]}` and
+  become admin (bypassing the whole `/admin` promote flow), or PUT **someone else's** id to
+  overwrite their name/email/bio/password hash.
+- Same hole: `PUT /user/{userId}/profile-picture` accepts any `userId` — anyone can replace
+  anyone's avatar.
+- Fix: `PATCH /api/v1/user/me` with a narrow DTO (`first_name, last_name, bio, course`) +
+  principal-derived id; profile-picture likewise principal-derived. Role changes only via `/admin`.
+
+### 4. (NEW) Authz holes around admin-flavoured endpoints (SecurityConfig only guards `/api/v1/admin/**`)
+
+- `POST /api/v1/posts/{postId}/approve` — publish/reject authority for **every ROLE_USER**.
+- `GET /api/v1/posts/pending`, `/posts/pending/department/{id}` — moderation queues visible to any user.
+- Write endpoints open to any authenticated user: schools (`POST /schools`, `PUT /schools/edit/{id}`,
+  `DELETE /schools/delete/{id}`), departments (`POST/PUT/DELETE /departments/{id}`), subject CRUD.
+  `DELETE /api/v1/departments/1` **kills the entire home feed** (the frontend's feed source is
+  department row 1 by design — see #7).
+- Note: the rule `requestMatchers("/api/v1/department/**")` (singular) matches nothing — dead config.
+- Fix: `@PreAuthorize("hasRole('ADMIN')")` (or path rules) on approve/pending and on school/
+  department/subject writes; keep their GETs authenticated-user.
+
+### 5. (NEW) `GlobalExceptionHandler` answers 400 for everything
+
+- `@ExceptionHandler(Exception.class)` maps **every** controller-thrown exception — including
+  "not found" and state conflicts — to HTTP 400 `{timestamp, error, message, status:400}`.
+  Clients cannot distinguish 404/409; retry/logging logic degrades.
+- Fix: map not-found → 404, illegal-state → 409, validation → 400; keep the `{message}` key the
+  frontend already prefers.
 
 ---
 
-## 🟠 P1 — Endpoints that delete frontend hacks
+## 🟠 P1 — Endpoints that delete frontend hacks or unblock UI
 
-### 3. `GET /api/v1/posts` — site-wide approved feed
+### 6. Canonical post id — `PostCreateResponse` must expose the row PK — _BLOCKED-IN_
 
-- No global list exists (only `/posts/{id}`, `/posts/user/{id}`, `/posts/department/{id}`, `/posts/pending*`, `/posts/history/{id}`).
-- Frontend sources the home feed from `GET /posts/department/1` via a `FEED_DEPARTMENT_ID` constant — breaks if department row 1 disappears.
-- Suggested query:
-    ```sql
-    SELECT * FROM posts WHERE status = 'APPROVED' AND is_latest_version = true
-    ORDER BY updated_at DESC
-    ```
-    Pagination welcome but not required by the current UI.
+- `PostCreateResponse` = `{user_id, post_id, message}` (logical `post_id` only, live-verified),
+  but detail/upload/vote/vault lookups use `postRepository.findById(...)` — the **row PK**.
+- The frontend regex-scrapes the row id out of the `message` string (`/Id\s+(\d+)/`); any
+  rewording silently breaks attachments and votes on just-created posts.
+- Fix (pick ONE and document): **a)** add `id` (row PK) to `PostCreateResponse` — aligns with
+  `PostResponse.id` and everything wired today — **or b)** migrate lookups to logical `post_id`.
 
-### 4. Canonical post id — `PostCreateResponse` must expose the row PK — _BLOCKED-IN_
+### 7. Feed source: keep `GET /posts/department/1` but protect the row; `GET /posts` still welcome
 
-- `PostCreateResponse` = `{user_id, post_id, message}` (logical `post_id` only), but `FileServiceImplementation.uploadFileV1` and `POST /votes` (`VoteRequest.post_id`) look up `postRepository.findById(...)` — the **row PK**.
-- The frontend therefore regex-scrapes the row id out of the human-readable `message` string (`/Id\s+(\d+)/`); any rewording silently breaks attachments and votes on just-created posts.
-- Fix (pick ONE and document it):
-    - **a)** add `@JsonProperty("id") Long id` (row PK) to `PostCreateResponse` — aligns with everything wired today (`PostResponse.id` is the row PK and frontend deep-links use it), **or**
-    - **b)** migrate upload/vote/detail lookups to the logical `post_id` everywhere.
+- **Decision update (2026-09-05, user):** department row 1 **is** DCISM — permanent by design.
+  The old "make department_id nullable" option is dropped.
+- Still wanted: `GET /api/v1/posts` (approved+latest, `ORDER BY updated_at DESC`, pagination ok)
+  so the feed stops depending on a magic id; and #4's ADMIN guard so row 1 cannot be DELETEd.
 
-### 5. `GET /api/v1/user/me`
+### 8. `GET /api/v1/user/me`
 
-- `AuthResponse` carries only `email`; "who am I" is unresolvable from the token alone.
-- Frontend workaround: fetch the **entire user list** on sign-in and match emails (`resolveAndCacheUser`) — O(all users), and an open user-list surface until item 1 lands.
-- Fix: `GET /api/v1/user/me` from the principal, returning the sanitized `UserResponse`.
+- `AuthResponse` carries only `email`; "who am I" is unresolvable from the token.
+- Workaround in place: fetch the **entire user list** on sign-in and match emails
+  (`resolveAndCacheUser`) — O(all users), and it keeps the #1 exposure surface hot.
+- Fix: `GET /user/me` from the principal, returning the sanitized `UserResponse`.
 
-### 6. Vault: decide bookmarks or delete the facade — _MOCK (button inert)_
+### 9. (EXPANDED) Vault is unusable as bookmarks — redesign or delete the facade — _MOCK (button inert)_
 
-- `Vault.user_id` is `@Column(unique = true)` → exactly **one** saved post per user ever; a second add throws `RuntimeException("Failed to add post to Vault")`.
-- `GET /api/v1/vaults/check` declares `@RequestBody` on a **GET** — physically uncallable from browser `fetch` (GET forbids bodies).
-- If bookmarks are wanted: drop the unique on `user_id`, add composite unique `(user_id, post_id)`, change check to `GET /vaults/check/{postId}` (or query param).
-- If not wanted: delete `/vaults/check` so no one burns a sprint wiring it.
+Source-verified 2026-09-06, four separate breakages:
 
-### 7. `FileResponse.download_url` is wrong — _BLOCKED-IN_
+- `Vault.user_id` is `unique=true` → **one saved post per user ever**; second add throws.
+- `GET /vaults/user` serializes raw `Vault` entities with `@JsonIgnore` on `post`/`user` →
+  response is just `{id, label}` — **no post content at all**, nothing for a bookmarks UI to render.
+- `GET /vaults/{id}` → `getVaultEntryV1` is a stub returning `Optional.empty()` → always 404.
+- `GET /vaults/check` declares `@RequestBody` on GET → uncallable from browser fetch.
+- If bookmarks are wanted: composite unique `(user_id, post_id)`; return a `VaultResponse` with a
+  post summary (`post id, title, author, created_at`); `GET /vaults/check/{postId}`;
+  implement (or delete) `GET /vaults/{id}`. If not wanted: delete the controller.
 
-- Built value: `/api/files/{id}/download`. Real route: `GET /api/v1/files/download/{id}` (auth-gated).
-- Frontend ignores the field and constructs the path from `id`. Fix or drop the field.
+### 10. `FileResponse.download_url` is wrong — _BLOCKED-IN_
+
+- Built value `/api/files/{id}/download`; real route `GET /api/v1/files/download/{id}` (auth-gated).
+- Frontend ignores the field and builds the path from `id`. Fix or drop.
+
+### 11. (PROMOTED from P3, NEW urgency) Profile-picture bytes are unreachable over HTTP — _MOCK (avatar art)_
+
+- `PUT /user/{id}/profile-picture` stores `uploads/profile-pictures/...` and returns the relative
+  path, but **nothing serves `uploads/`**: no `ResourceHandler`, and `/files/download/{id}` only
+  knows DB-registered post files (and demands an `Authorization` header an `<img>` can't send).
+- So even after wiring, `user.profile_picture` is a dead string; the frontend stays on `dog.png`
+  placeholders and blob-fetch hacks.
+- Fix: public `GET /api/v1/user/{id}/profile-picture` (image bytes, inline) — or a static resource
+  handler for `uploads/` — and allow `<img>`-safe access (avatars are public by nature).
 
 ---
 
-## 🟡 P2 — "Departments are deprecated" vs the schema
+## 🟡 P2 — Data-shape correctness
 
-### 8. `posts.department_id` is `nullable=false` while departments aren't a product concept
+### 12. Subject-tagged queries — _BLOCKED-IN (client-side filter)_
 
-- `PostRequest` requires `departmentId` (`@NotNull`); `createPostV1` validates _"Subject does not belong to the department id ..."_.
-- Chain today: post → department 1 → school (`school_id nullable=false`). Two magic rows the frontend hardcodes (`DEFAULT_DEPARTMENT_ID=1`, `DEFAULT_SCHOOL_ID=1`).
-- Fix (choose one): make `department_id` nullable and skip the subject↔department validation when absent; **or** seed a permanent, protected "General" department + school and name it in the docs.
+- `post_tags` join table holds subject **ids**; `mapToResponse` collapses to `post_tag` = first
+  subject's **name** (multi-tags lost; input id → output name round-trip is impossible).
+- Fix: expose `subjects: [{id, name}]` on `PostResponse` and add `GET /api/v1/posts/subject/{subjectId}`.
+- Verified non-issue while here: `GET /api/v1/subject/{subjectId}` **is** correctly registered
+  (live spec) — the missing-slash mapping in `SubjectController` works after all.
 
-### 9. Subject-tagged queries — _BLOCKED-IN (client-side filter)_
+### 13. `PostResponse` emits BOTH `is_latest_version` and `latest_version` (NEW — live-verified)
 
-- `post_tags` join table holds **subject ids**, but `mapToResponse` collapses them to `post_tag` = first subject's **name** (extra tags lost).
-- Sidebar course filter currently fetches the whole cached feed and matches `post_tag === name` in the browser via `/?subject=<name>`.
-- Fix: expose subject id(s) on `PostResponse` and add `GET /api/v1/posts/subject/{subjectId}`.
+- The `IsLatestVersion` field with dual getters (`getLatestVersion()` + `getIsLatestVersion()`)
+  shows up in the deployed OpenAPI schema as two properties. The frontend reads
+  `is_latest_version`; the duplicate is dead wire weight and an IDE-rename landmine.
+- Fix: one getter, one field; keep wire name `is_latest_version`.
+
+### 14. (NEW) Votes are keyed to the version row → new versions silently reset vote counts
+
+- `Vote.post_id` FK → row PK. `PUT /posts/{rowId}` creates a fresh version row; its vote counts
+  start at 0 and old votes are orphaned on the superseded row.
+- Decide: migrate/inherit votes on approve of version > 1, or key votes by logical `post_id`, or
+  document "votes are per-version". The frontend shows counts from `PostResponse` and will keep
+  looking like it lost data on every edit.
+
+### 15. (NEW) `DELETE /api/v1/posts/{postId}` is a no-op stub — _MOCK (delete UI absent)_
+
+- `PostServiceImplementation.deletePostV1` returns `""` with a `//softdelete to be implemented`
+  marker; the endpoint answers 200 while doing nothing. The frontend cannot ship delete against it.
+- Fix: implement soft delete (flag + hide from all read queries — cf. the `User` `@SQLDelete`
+  pattern already in use) or remove the route so nobody wires a lie.
+
+### 16. (NEW) File upload validation
+
+- `FileController.uploadFile`: `contentType.equals(...)` NPEs → 400 via #5 when a part omits
+  content-type; the MIME is client-declared (trust issue: pair extension/magic-byte check);
+  null/empty `files` is caught after binding anyway. Minor but cheap.
+
+### 17. Vote "no result" should be `204`, not `200 + empty body`
+
+- `POST /votes` (toggle-clear) and `GET /votes/{id}/my-vote` (no vote). Frontend already tolerates
+  both. **Do not change the toggle semantics** (same-click deletes, opposite-click flips — the
+  frontend is built on exactly this).
 
 ---
 
 ## 🟢 P3 — Hygiene & product gaps
 
-### 10. Serve uploaded images — _MOCK (placeholder avatars)_
+### 18. OpenAPI metadata
 
-- Profile pictures land in `uploads/profile-pictures/`; `ArcaApplication` has no `ResourceHandler`, and `GET /files/download/{id}` demands an `Authorization` header that `<img src>` cannot send.
-- Frontend does blob-URL fetches (works, wasteful at scale) and placeholder `dog.png` art in cards.
-- Fix: public `GET /api/v1/files/image/{id}` (inline, non-auth for images is fine for avatars) or a static resource handler.
+- `servers.url` is stale (`http://localhost:8080`; reality `:20255` / `https://arca-backend.dcism.org`).
+- **(NEW) springdoc artifact, do not "fix":** generated schemas show implicit fields in camelCase
+  while the wire is snake_case (only explicit `@JsonProperty`, e.g. `user_id`, renders snake).
+  Wire casing is snake_case — frontend live-verified. Reconfigure springdoc or just note it.
 
-### 11. OpenAPI `servers.url` is stale
+### 19. Sanitize post content server-side
 
-- Spec: `http://localhost:8080`. Reality: local `:20255`, deployed `https://arca-backend.dcism.org`. Generated clients target the wrong host.
+- `content` is raw Lexical HTML, stored as-is, rendered unescaped (accepted tradeoff: own editor +
+  admin approval — but see #4: approval is currently open to everyone). Structural fix: Jsoup
+  `Safelist.relaxed()` (+`<img>`) at create/update.
 
-### 12. `Post.IsLatestVersion` dual getters — serialization landmine
+### 20. Refresh-token hygiene (minor)
 
-- `getLatestVersion()` **and** `getIsLatestVersion()` exist; Jackson emits `is_latest_version` today (what the frontend parses), but an IDE rename could silently flip the wire field. Normalize to `isLatestVersion()`.
+- `/auth/refresh` returns the **same** refresh token (no rotation); expired refresh rows are only
+  deleted lazily on use; `logout` deletes all of a user's tokens (fine). Optional: rotate on
+  refresh + scheduled purge.
 
-### 13. Vote "no result" should be `204`, not `200 + empty body`
+### 21. MOCK features needing product decisions (no endpoint at all)
 
-- `POST /votes` (toggle-clear) and `GET /votes/{id}/my-vote` (no vote) return `200` with empty bodies. Frontend already tolerates this; **do not change the toggle semantics** (same-click deletes, opposite-click flips — the frontend is built on exactly this).
-
-### 14. Sanitize post content server-side
-
-- `content` is raw Lexical HTML, stored as-is and rendered unescaped by the frontend (accepted XSS tradeoff today: own editor + admin approval). Structural fix: Jsoup `Safelist.relaxed()` (+`<img>`) at create/update.
-
-### 15. MOCK features needing product decisions (no endpoint at all)
-
-| Feature                                                        | Current frontend state                | What it needs                                                                        |
-| -------------------------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
-| Announcements rail                                             | static strings                        | `GET /api/v1/announcements` (public? admin-managed?)                                 |
-| Header search                                                  | inert placeholder                     | `GET /api/v1/posts/search?q=`                                                        |
-| Save Draft                                                     | no-op button                          | `DRAFT` status + list-own-drafts (note: `createPostV1` hard-sets `PENDING_APPROVAL`) |
-| Link embeds (Video/Image cards, hardcoded YT id `4WfSohJ9K5o`) | mock markup                           | a link entity/endpoint, else frontend deletes the block                              |
-| Forgot Password                                                | dead link                             | reset flow (email token)                                                             |
-| Trending                                                       | derived client-side from feed upvotes | optional `GET /posts/trending` with time-decay                                       |
+| Feature                                                         | Current frontend state                   | What it needs                                                                  |
+| --------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------ |
+| Announcements rail (×2 duplicate components)                    | static strings                           | `GET /api/v1/announcements` (admin-managed? public?)                           |
+| Header search                                                   | inert placeholder                        | `GET /api/v1/posts/search?q=`                                                  |
+| Save Draft                                                      | no-op button                             | `DRAFT` status + list-own-drafts (`createPostV1` hard-sets `PENDING_APPROVAL`) |
+| Link embeds (Video/Image blocks, hardcoded YT id `4WfSohJ9K5o`) | mock markup on create page               | a link entity/endpoint, else frontend deletes the block                        |
+| Forgot Password                                                 | dead link                                | reset flow (email token)                                                       |
+| Trending                                                        | derived client-side from feed upvotes    | optional `GET /posts/trending` with time-decay                                 |
+| Edit Profile / profile cover (`frieren.png` banner)             | inert button; no `cover` field on `User` | DTO from #3; `cover_image` field + upload if a banner is actually wanted       |
 
 ---
 
 ## Questions before implementation (answers change frontend work)
 
-- **Q1 (item 4):** canonical id story — row PK added to create response (a), or logical `post_id` everywhere (b)?
-- **Q2 (item 9):** is `post_tag` intended to be single or multi-subject? (Join table says multi; DTO says first-only.)
-- **Q3 (item 8):** confirm departments/schools are dead specifically for the post domain.
-- **Q4 (item 15):** which MOCK features are actually in-product? The frontend will delete ghosts otherwise.
+- **Q1 (#6):** canonical id story — row PK in create/update responses (a), or logical `post_id`
+  everywhere (b)? Also: `PUT /posts/{rowId}` should return the **new version's row PK** the same way.
+- **Q2 (#12):** is `post_tag` intended to be single or multi-subject? (Join table says multi; DTO says first-only.)
+- **Q3 (#9):** are bookmarks actually in-product? If yes, vault redesign lands as specified; if no, frontend deletes the button and `vaults` can be pruned.
+- **Q4 (#21):** which MOCK features are actually in-product? The frontend will delete ghosts otherwise.
+- **Q5 (#14):** per-version vote counts acceptable, or inherit/migrate?
 
 ## What the frontend deletes as each item lands
 
-| Item | Frontend workaround removed (paths relative to `arca-front/src/`)                                             |
-| ---- | ------------------------------------------------------------------------------------------------------------- |
-| #3   | `getFeed()` department-1 hack + `FEED_DEPARTMENT_ID` (`core/api/endpoints.ts`, `core/config.ts`)              |
-| #4   | `parseCreatedPostRowId()` message regex (`core/api/endpoints.ts`)                                             |
-| #5   | `resolveAndCacheUser()` email match (`core/auth/session.ts`), `getUsers()` (`endpoints.ts`)                   |
-| #6   | bookmark wiring on `fullPost.ts` (currently inert)                                                            |
-| #7   | hand-built download paths (`post-page.ts`)                                                                    |
-| #8   | `DEFAULT_DEPARTMENT_ID`/`DEFAULT_SCHOOL_ID` + hidden payload fields (`core/config.ts`, `create-post-page.ts`) |
-| #9   | client-side `/?subject=` filter (`features/home/home-page.ts`)                                                |
-| #10  | blob-URL fetch hack (`features/post/post-page.ts`) + placeholder avatar art                                   |
+| Item | Frontend workaround removed (paths relative to `arca-front/src/`)                                                            |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------- |
+| #1   | nothing directly (but gates #8's list-all fallback removal)                                                                  |
+| #6   | `parseCreatedPostRowId()` message regex (`core/api/endpoints.ts`)                                                            |
+| #7   | `FEED_DEPARTMENT_ID` hack (`core/api/endpoints.ts`, `core/config.ts`)                                                        |
+| #8   | `resolveAndCacheUser()` email match (`core/auth/session.ts`), `getUsers()` (`endpoints.ts`)                                  |
+| #9   | bookmark wiring decision (`features/post/components/fullPost.ts`, currently inert)                                           |
+| #10  | hand-built download paths (`features/post/post-page.ts`)                                                                     |
+| #11  | blob-URL avatar hack + `dog.png` placeholders (`shared/components/{post,header}.ts`, `features/post/components/fullPost.ts`) |
+| #12  | client-side `/?subject=` filter (`features/home/home-page.ts`)                                                               |

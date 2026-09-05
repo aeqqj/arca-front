@@ -21,7 +21,10 @@
 ## Frontend rules that came out of the plan
 
 - Departments are **deprecated** in this UI; `department_id`/`school_id` are fixed
-  defaults (`1`) in `src/core/config.ts` only because the post schema requires them.
+  defaults (`1`) in `src/core/config.ts`. Per the user (2026-09-05) department row 1
+  **is** DCISM — permanent by design (table kept for future scalability), so these
+  are intentional defaults, not hacks. Missing endpoints/gaps are written up in
+  **`BACKEND_PLAN.md`** (hand-off doc; the frontend never edits the backend repo).
 - All HTTP goes through `src/core/api/` (`client.ts` / `endpoints.ts`); feature code
   never calls `fetch` directly. Session state: `src/core/auth/session.ts`.
 - Pages are async string-template renders guarded by `core/render.ts`
