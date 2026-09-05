@@ -3,11 +3,12 @@
 > Status: **implemented, awaiting end-to-end verification** (needs arca backend + MySQL running).
 > Drafted 2026-09-05 in a planning session; revised same day to **frontend-only**.
 > Update the checkboxes below when parts land or change.
+> Backend gaps/workarounds are tracked separately in `BACKEND_PLAN.md` (hand-off doc for the backend team).
 
 ## Hard constraints (agreed with the user — do not revisit without asking)
 
 - **NEVER touch the backend at `/home/charles/dev/arca`.** The user owns it and reverted
-  everything previously proposed there. All wiring must work against the *existing* API.
+  everything previously proposed there. All wiring must work against the _existing_ API.
 - **Departments are deprecated** in the frontend UI. They still exist in the post schema,
   so the frontend sends fixed defaults: `DEFAULT_DEPARTMENT_ID = 1`, `DEFAULT_SCHOOL_ID = 1`
   (see `src/core/config.ts`, env-overridable).
@@ -30,7 +31,7 @@
 - Feed source: `GET /api/v1/posts/department/1` (latest APPROVED posts). There is **no** global
   `GET /posts` and none will be added.
 - `GET /api/v1/posts/{rowId}` — the path param is the **row PK** (`PostResponse.id`), not `post_id`.
-- `GET /api/v1/posts/user/{userId}`, `GET /api/v1/user` (list all — used to find *me* by email;
+- `GET /api/v1/posts/user/{userId}`, `GET /api/v1/user` (list all — used to find _me_ by email;
   there is no `/me` endpoint), `GET /api/v1/subject` (courses for the "Pick a course" select).
 - `POST /api/v1/posts` body `{title (≤30), content (HTML), user_id, department_id, post_tag?}`;
   `post_tag` is a **subject id that must belong to the department sent** — a mismatch returns 400,
