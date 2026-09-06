@@ -1,5 +1,6 @@
 import { routes, publicRoutes } from "./routes.ts";
 import { isAuthenticated } from "../auth/session.ts";
+import { errorPanel, nextRenderToken, paint } from "../render.ts";
 
 document.addEventListener("click", (e) => {
 	if (e.defaultPrevented) {
@@ -28,9 +29,7 @@ export function navigate(path: string): void {
 export const urlLocationHandler = () => {
 	let location = window.location.pathname;
 
-	console.log("current path:", location);
-
-	if (location.length == 0) {
+	if (location.length === 0) {
 		location = "/";
 	}
 
@@ -50,13 +49,7 @@ export const urlLocationHandler = () => {
 	if (route) {
 		void route.page();
 	} else {
-		document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-			<div class="h-full flex flex-col items-center justify-center gap-2 text-fg3">
-				<p class="text-title-md font-medium text-fg2">404</p>
-				<p class="text-body-md">No page at ${location}</p>
-				<a href="/" class="text-fg-link hover:underline">Back to feed</a>
-			</div>
-		`;
+		paint(nextRenderToken(), errorPanel("404", `No page at ${location}`));
 	}
 };
 

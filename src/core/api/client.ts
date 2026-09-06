@@ -1,5 +1,6 @@
 // fetch wrapper: base URL, JSON handling, Bearer auth, one auto-refresh
-// on 401, and normalized ApiError. All HTTP in the app goes through here.
+// on auth failure (401, or the backend's empty-body 403), and normalized
+// ApiError. All HTTP in the app goes through here.
 
 import { API_BASE } from "../config.ts";
 import { clearRememberedVotes } from "../votes.ts";
@@ -141,16 +142,20 @@ export async function request<T>(
 		form: opts.form,
 	});
 
-	if (
-		res.status === 401 &&
-		auth &&
-		getRefreshToken() &&
-		!(await tryRefresh())
-	) {
-		forceSignedOut();
-		throw new ApiError(401, "Session expired. Please sign in again.");
-	}
-	if (res.status === 401 && auth && getRefreshToken()) {
+	// Auth failures come back as 401 — or, against this backend, as 403 with
+	// an empty body (no auth entry point configured), including expired tokens.
+	// Both mean "access token unusable": refresh once, replay once. A genuine
+	// permissions 403 survives the replay and is surfaced as an error below.
+	const authFailed =
+		(res.status === 401 || res.status === 403) && auth && getRefreshToken();
+	if (authFailed) {
+		if (!(await tryRefresh())) {
+			forceSignedOut();
+			throw new ApiError(
+				res.status,
+				"Session expired. Please sign in again.",
+			);
+		}
 		// refresh succeeded — replay the request once
 		res = await rawFetch(path, {
 			method,
@@ -174,7 +179,15 @@ export async function request<T>(
 	if (expect === "text") {
 		return text as T;
 	}
-	return (text ? JSON.parse(text) : undefined) as T;
+	if (!text) {
+		return undefined as T;
+	}
+	try {
+		return JSON.parse(text) as T;
+	} catch {
+		// some v1 endpoints answer 200 with a text/plain body (e.g. /vaults/*)
+		throw new ApiError(res.status, "Server returned a non-JSON response");
+	}
 }
 
 export function apiGet<T>(path: string): Promise<T> {

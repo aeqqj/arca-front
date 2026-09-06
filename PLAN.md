@@ -23,7 +23,9 @@
   A deployed backend also exists at **<https://arca-backend.dcism.org/>** — currently in use
   via `VITE_API_BASE_URL` in `.env` (its CORS permits `localhost:5173`).
 
-## API facts (verified against the code, 2026-09-05)
+## API facts (verified against the code, 2026-09-05; **wire-verified against the live
+
+deployment 2026-09-06** — see "Live probe results" below)
 
 - Spring Boot on port **20255**; Jackson **SNAKE_CASE** on the wire; JWT bearer auth.
 - `POST /api/v1/auth/login` `{email,password}` → `{access_token, refresh_token, token_type, email}`.
@@ -51,6 +53,35 @@
 - **Vault ≠ bookmarks**: `user_id` is UNIQUE on the vault row (one saved post per user),
   duplicate add throws, and `GET /vaults/check` takes a `@RequestBody` on GET — impossible
   from browser fetch. Bookmark buttons deliberately stay inert pending user direction.
+  Wire-verified 2026-09-06: `DELETE /vaults/remove` query param is **`postId`** (camelCase —
+  `@RequestParam` names bypass the Jackson naming strategy), and `GET /vaults/user` entries
+  are only `{id, label}` (post is `@JsonIgnore`d → nothing to render).
+
+### Live probe results (2026-09-06, against <https://arca-backend.dcism.org>)
+
+36 contract checks; full matrix run reproducible via the archived probe script.
+
+- Auth chain, snake_case, feed/create/vote-toggle/upload/download/history/refresh/logout:
+  **all behave exactly as the types above describe.** Row-PK regex, vote toggle empty-body,
+  stale `download_url`, 400-envelope errors — confirmed on the wire.
+- **Access-token TTL is 15 min** (JWT `exp-iat` = 900 s). **Auth failures come back `403` with an
+  empty body, not `401`** — live-confirmed 2026-09-06 for no-token, garbage token, AND a genuinely
+  expired token (15-min sleep probe); refresh with a valid RT still returns 200. `client.ts`
+  originally watched 401 only → sessions would silently die every 15 min. **Fixed:** 401-or-403 on
+  an authed call now triggers the same single-flight refresh + one replay; a genuine permission
+  403 survives the replay and surfaces as an `ApiError`. Non-JSON 200 bodies (some endpoints
+  answer `text/plain`) also became clean `ApiError`s instead of `SyntaxError` crashes.
+- Deployed DB is nearly **empty seed data**: `GET /subject` → `[]` (course select will render
+  nothing), feed `[]` until something is approved. Department row 1 exists (posts accept it).
+- `GET /posts/user/{id}` is **approved-only** — a creator cannot see their own PENDING/REJECTED
+  post anywhere in the UI. "My pending posts" needs a backend endpoint (BACKEND_PLAN) or
+  row-id deep-link bookkeeping.
+- `FileUploadResult.file_path` leaks the server's **absolute filesystem path**
+  (`/data/users/s22101440/arca-backend/uploads/...`) — add to P0 leak list; frontend ignores it.
+- CORS good: preflight 200 with reflected ACAO for `localhost:5173`, `Content-Disposition`
+  exposed (blob downloads work cross-origin).
+- Probe artifacts left on the deployed DB: user `arca.e2e.1788628665@example.com` (id 2,
+  ROLE_USER), post row 1 / logical 1 (`E2E probe post`, PENDING_APPROVAL, 1 attached png file id 1).
 
 ## Architecture (agreed)
 
@@ -82,7 +113,8 @@
       (user name, sign out, conditional Admin)
 - [x] `pnpm build` green; proxy smoke-tested (502 without backend = wired)
 - [x] TTL cache in `core/api/cache.ts`, wired into all GETs; invalidation on mutations +
-      session changes; verified with unit tests (node strip-types) and `pnpm build` green
+      session changes; verified by `pnpm build` + live wire-probe 2026-09-06 (unit tests were
+      run ad-hoc in a scratch dir during the original session — **none committed to this repo**)
 - [x] §1 static scan follow-up (2026-09-05): sidebar now renders real subjects from
       `GET /subject` and filters the feed client-side via `/?subject=<name>`; trending =
       top-upvoted from the cached feed (duplicated feature copies merged into
@@ -96,6 +128,16 @@
       `post()`/`fullPost()`); cleared on sign-in/sign-out/force-sign-out with the rest of the
       session state. Only lost on a hard reload; the post-detail page still fetches
       authoritative `my-vote` from the server.
+- [x] Static cleanup (2026-09-06): removed dead `shared/components/link.ts`, `public/icons.svg`,
+      `public/github.svg`, `remixicon` dep + import, Phosphor CDN `<link>` in `index.html`, router
+      `console.log`, dead `text-foreground0`/`bg-foreground0` classes, orphan `.toolbar-btn.is-active`
+      CSS, 7 unused lucide icons; router 404 branch now paints via `paint()`/`errorPanel()` (escapes
+      the interpolated path). `pnpm build` green. Mock screens (createLinks, Video/Image blocks,
+      announcements, dog/frieren art) untouched — deferred §2/§3 by user decision.
+- [x] §2 live wire-probe (2026-09-06, deployed backend): 36/36 meaningful contract checks pass —
+      auth chain, row-PK regex, vote toggle, upload/download, history, refresh, logout, CORS.
+      Findings → "Live probe results" above + BACKEND_PLAN #22–#24. Expired→403 fix landed in
+      `client.ts`.
 - [ ] End-to-end with backend + MySQL: signup→signin→create→approve (admin)→feed→detail→download,
       401 refresh-replay, stale-render check, **live vote toggle**
 - [ ] Left inert on purpose: Save Draft, search, **bookmark (vault mismatch — see API facts)**,

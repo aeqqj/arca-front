@@ -9,7 +9,7 @@ export function SignInPage() {
 	paint(
 		token,
 		`
-        <section class="flex-1 flex justify-center items-center select-none text-foreground0 text-fg1">
+        <section class="flex-1 flex justify-center items-center select-none text-fg1">
             <div class="w-94 flex flex-col gap-6">
                 <div class="flex items-baseline gap-4">
                     <h3 class="font-semibold text-shadow-lg text-6xl">sign in</h3>
@@ -32,7 +32,7 @@ export function SignInPage() {
                         <button type="button" class="w-full text-end text-fg4 text-sm hover:text-fg2 transition-colors">Forgot Password?</button>
                     </div>
                     <p id="auth-error" class="text-bad text-sm hidden"></p>
-                    <button id="signin-submit" class="px-5 py-3 bg-foreground0 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">Sign In</button>
+                    <button id="signin-submit" class="px-5 py-3 bg-fg1 text-base text-bg1 border border-white rounded-xs hover:bg-fg1/90 transition-colors">Sign In</button>
                     <p class="w-full text-center text-fg4 text-sm">No account? <a href="/auth/signup" class="underline hover:text-fg2 transition-colors">Sign up</a></p>
                 </form>
             </div>

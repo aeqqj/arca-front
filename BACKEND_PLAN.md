@@ -205,6 +205,30 @@ Source-verified 2026-09-06, four separate breakages:
 
 ---
 
+### 22. 🔴 (NEW 2026-09-06 live) Auth failures return `403` with an **empty body**, not `401`
+
+- No/expired/garbage bearer token on a protected endpoint → `403` `""` (Spring's default denied
+  handler; there is no `authenticationEntryPoint`). Auth-specific endpoints do return 401 — but
+  protected-resource calls never do.
+- Impact: browser clients cannot distinguish “access token expired, refresh me” from “banned/no
+  permission”; auto-refresh-on-401 designs silently never fire. Fix: return `401` for
+  unauthenticated (`HttpServletResponse SC_UNAUTHORIZED` entry point with a small JSON body
+  `{"error":"Unauthorized"}`), reserve `403` for authenticated-but-forbidden.
+
+### 23. 🟠 (NEW 2026-09-06 live) `GET /posts/user/{id}` is approved-only — owners can't see their pending posts
+
+- `findLatestApprovedPostsByUserId` filters `status='APPROVED'`, so after `POST /posts` the author
+  sees their new post **nowhere** (feed excludes it too) until an admin approves — rejections
+  with a `rejection_reason` are likewise invisible to the person who needs to fix them.
+- Fix: `GET /api/v1/posts/user/{id}/mine` (or `?status=` param, own-user or ADMIN only) returning
+  PENDING/REJECTED rows for the requesting principal.
+
+### 24. 🔴 (NEW 2026-09-06 live) `file_path` leaks absolute server filesystem paths
+
+- `FileUploadResult.file_path` ships `/data/users/s22101440/arca-backend/uploads/posts/1/…` to
+  every API client (also on `GET /files/{id}`). Internal layout + service account name exposure.
+- Fix: drop `file_path` from the response DTO (the `id`-based download route is sufficient).
+
 ## Questions before implementation (answers change frontend work)
 
 - **Q1 (#6):** canonical id story — row PK in create/update responses (a), or logical `post_id`
@@ -213,6 +237,8 @@ Source-verified 2026-09-06, four separate breakages:
 - **Q3 (#9):** are bookmarks actually in-product? If yes, vault redesign lands as specified; if no, frontend deletes the button and `vaults` can be pruned.
 - **Q4 (#21):** which MOCK features are actually in-product? The frontend will delete ghosts otherwise.
 - **Q5 (#14):** per-version vote counts acceptable, or inherit/migrate?
+- **Q6 (#22):** confirm 401-for-unauthenticated is the target — the frontend will keep its
+  refresh-replay design if so, or add a 403 fallback path if not.
 
 ## What the frontend deletes as each item lands
 

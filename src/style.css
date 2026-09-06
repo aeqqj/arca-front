@@ -68,9 +68,6 @@
 	.toolbar-btn {
 		@apply w-8 h-8 flex items-center justify-center rounded-xs text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors;
 	}
-	.toolbar-btn.is-active {
-		@apply bg-white/10 text-fg1;
-	}
 	.toolbar-select {
 		@apply cursor-pointer bg-transparent text-fg4 hover:bg-white/4 hover:text-fg1 transition-colors text-sm px-2 py-1 rounded-xs outline-none;
 	}
@@ -131,6 +128,7 @@
 	}
 }
 
-html, body {
-    overflow: hidden;
+html,
+body {
+	overflow: hidden;
 }
