@@ -23,7 +23,6 @@
     "@tailwindcss/vite": "^4.2.2",
     "lexical": "^0.49.0",
     "lucide": "^1.33.0",
-    "remixicon": "^4.9.1",
     "tailwindcss": "^4.2.2"
   }
 }
