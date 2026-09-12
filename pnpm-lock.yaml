@@ -35,9 +35,6 @@ importers:
       lucide:
         specifier: ^1.33.0
         version: 1.33.0
-      remixicon:
-        specifier: ^4.9.1
-        version: 4.9.1
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
@@ -507,9 +504,6 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  remixicon@4.9.1:
-    resolution: {integrity: sha512-36gLSoujkabnCFZFDyP17VNh9piuBA/rsXUb4auSJWLGsHVXtmxLj/EM5FjaEAGnk8oIAj1Azob/DZ2N+90lAQ==}
-
   rolldown@1.0.0-rc.15:
     resolution: {integrity: sha512-Ff31guA5zT6WjnGp0SXw76X6hzGRk/OQq2hE+1lcDe+lJdHSgnSX6nK3erbONHyCbpSj9a9E+uX/OvytZoWp2g==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -935,8 +929,6 @@ snapshots:
       source-map-js: 1.2.1
 
   prettier@3.8.3: {}
-
-  remixicon@4.9.1: {}
 
   rolldown@1.0.0-rc.15:
     dependencies:
