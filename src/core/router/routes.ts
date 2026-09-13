@@ -4,6 +4,7 @@ import { HomePage } from "../../features/home/home-page.ts";
 import { ProfilePage } from "../../features/profile/profile-page.ts";
 import { CreatePostPage } from "../../features/create-post/create-post-page.ts";
 import { PostPage } from "../../features/post/post-page.ts";
+import { SearchPage } from "../../features/search/search-page.ts";
 
 export const routes: Record<string, { page: () => void } > = {
     '/': {
@@ -23,7 +24,10 @@ export const routes: Record<string, { page: () => void } > = {
     },
     '/post-page': {
         page: PostPage,
-    }
+    },
+    '/search': {
+        page: SearchPage
+    },
     // 404: {
     //     page: ErrorPage,
     // }
