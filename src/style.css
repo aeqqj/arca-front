@@ -78,6 +78,9 @@
 		content: attr(data-placeholder);
 		@apply text-fg2/50 pointer-events-none;
 	}
+    .select-button {
+        @apply px-4 py-3 text-left hover:bg-bg3 transition-colors;
+    }
 }
 
 @layer base {

@@ -15,7 +15,7 @@ export function HomePage() {
                 <aside class="h-full overflow-y-auto shrink-0">
                     ${sideBar()}
                 </aside>
-                <div class="w-full h-full px-12 py-8 flex gap-10 justify-center overflow-y-auto">
+                <div class="w-full h-full px-12 py-6 flex gap-10 justify-center overflow-y-auto">
                     <div class="flex flex-col gap-6">
                         ${post()}
                         ${post()}
