@@ -33,6 +33,10 @@ import {
     Paperclip,
     Link,
     X,
+    Users,
+    LayoutGrid,
+    SquarePen,
+    BookOpenText,
 } from "lucide";
 
 export function initIcons() {
@@ -71,6 +75,10 @@ export function initIcons() {
             Paperclip,
             Link,
             X,
+            Users,
+            LayoutGrid,
+            SquarePen,
+            BookOpenText,
 		},
 	});
 }
