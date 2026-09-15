@@ -24,7 +24,7 @@ export function CreatePostPage() {
                         <form action="" class="w-200 flex flex-col gap-8 text-fg3">
                             <div class="flex flex-col gap-2">
                                 <label for="" class="text-fg2">Title</label>
-                                <input type="" class="p-4 h-fit w-full border border-border bg-bg2 hover:bg-bg3/60 focus:border-fg5/60 transition-colors">
+                                <input type="" class="p-4 h-fit w-full border border-border bg-bg2 hover:bg-bg3/60 focus:border-fg5/60 transition-colors" maxlength="128">
                             </div>
                             <div class="text-fg2 flex flex-col gap-2">
                                 <p>Video</p>
