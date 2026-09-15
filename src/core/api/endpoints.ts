@@ -17,7 +17,8 @@ export const POST = {
     BY_USER: (id: string) => `/api/v1/posts/user/${id}`,
     BY_PENDING: "/api/v1/posts/pending",
     BY_HISTORY: (id: string) => `/api/v1/posts/history/${id}`,
-    // BY_PENDING_DEPARTMENT: (id: string) => `/api/v1/posts/pending/${id}`, waiting for scale
+    APPROVE: (id: string) => `/api/v1/posts/${id}/approve`,
+    BY_PENDING_DEPARTMENT: (id: string) => `/api/v1/posts/pending/${id}`,
     // BY_DEPARTMENT: (id: string) => `/api/v1/posts/department/${id}`, 
 } as const;
 

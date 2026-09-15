@@ -37,6 +37,9 @@ import {
     LayoutGrid,
     SquarePen,
     BookOpenText,
+    Check,
+    Clock,
+    BarChart3,
 } from "lucide";
 
 export function initIcons() {
@@ -79,6 +82,9 @@ export function initIcons() {
             LayoutGrid,
             SquarePen,
             BookOpenText,
+            Check,
+            Clock,
+            BarChart3,
 		},
 	});
 }
