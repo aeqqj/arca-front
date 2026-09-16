@@ -6,7 +6,9 @@ export function AdminUsersPage() {
 	document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <div class="h-full flex">
             ${adminSideBar()}
-            ${adminHeader()}
+            <div class="flex flex-col flex-1 min-w-0">
+                ${adminHeader("Users")}
+            </div>
         </div>
     `;
     initIcons();
