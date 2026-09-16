@@ -82,8 +82,7 @@
         @apply px-4 py-3 text-left hover:bg-bg3 transition-colors;
     }
     .admin-table {
-        @apply border-separate border-spacing-0 border border-border bg-bg1 rounded-xs text-fg3;
-        table-layout: fixed;
+        @apply bg-bg2 border-separate border-spacing-0 border border-border rounded-xs text-fg3 table-fixed;
     }
     .admin-table th {
         @apply text-body-md font-medium text-left p-4 border-b border-border min-w-0 overflow-hidden;
