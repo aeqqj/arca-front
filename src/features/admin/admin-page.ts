@@ -44,7 +44,7 @@ export function AdminPage() {
                             <div class="h-fit w-fit py-2 px-4 bg-bg3 border border-border">
                                 <p class="text-fg3 font-medium">Pending Posts</p>
                             </div>
-                            <table class="admin-table w-full">
+                            <table class="dashboard-table w-full">
                                 <colgroup>
                                     <col class="w-[40%]" />
                                     <col class="w-[10%]" />
