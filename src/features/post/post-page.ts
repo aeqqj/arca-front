@@ -21,6 +21,6 @@ export function PostPage() {
             </div>
         </div>
     `;
-    initIcons();
-    bindYoutubeLinks(app);
+	initIcons();
+	bindYoutubeLinks(app);
 }

@@ -78,48 +78,48 @@
 		content: attr(data-placeholder);
 		@apply text-fg2/50 pointer-events-none;
 	}
-    .select-button {
-        @apply px-4 py-3 text-left hover:bg-bg3 transition-colors;
-    }
-    .dashboard-table {
-        @apply w-full bg-bg1 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
-    }
-    .dashboard-table th {
-        @apply text-fg2 text-body-md font-medium text-left p-4 border-b border-border min-w-0 overflow-hidden;
-    }
-    .dashboard-table td {
-        @apply text-fg2 text-body-md text-left p-4 border-b border-border min-w-0 overflow-hidden;
-    }
-    .dashboard-table tr:last-child td {
-        @apply border-b-0;
-    }
-    .data-table {
-        @apply w-full bg-bg2 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
-    }
-    .data-table th {
-        @apply text-fg2 text-body-md font-medium text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
-    }
-    .data-table td {
-        @apply text-fg2 text-body-md text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
-    }
-    .data-table tr:last-child td {
-        @apply border-b-0;
-    }
-    .data-table tr[data-post-id] {
-        @apply cursor-pointer;
-    }
-    .data-table tr.row-selected {
-        @apply bg-bg3;
-    }
-    .modal-backdrop {
-        @apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center;
-    }
-    .modal-content {
-        @apply relative bg-bg1 border border-border rounded-xs shadow-xl max-w-4xl w-full max-h-[85vh] overflow-y-auto;
-    }
-    .preview-panel {
-        @apply flex-1 min-w-0 flex flex-col;
-    }
+	.select-button {
+		@apply px-4 py-3 text-left hover:bg-bg3 transition-colors;
+	}
+	.dashboard-table {
+		@apply w-full bg-bg1 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
+	}
+	.dashboard-table th {
+		@apply text-fg2 text-body-md font-medium text-left p-4 border-b border-border min-w-0 overflow-hidden;
+	}
+	.dashboard-table td {
+		@apply text-fg2 text-body-md text-left p-4 border-b border-border min-w-0 overflow-hidden;
+	}
+	.dashboard-table tr:last-child td {
+		@apply border-b-0;
+	}
+	.data-table {
+		@apply w-full bg-bg2 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
+	}
+	.data-table th {
+		@apply text-fg2 text-body-md font-medium text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
+	}
+	.data-table td {
+		@apply text-fg2 text-body-md text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
+	}
+	.data-table tr:last-child td {
+		@apply border-b-0;
+	}
+	.data-table tr[data-post-id] {
+		@apply cursor-pointer;
+	}
+	.data-table tr.row-selected {
+		@apply bg-bg3;
+	}
+	.modal-backdrop {
+		@apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center;
+	}
+	.modal-content {
+		@apply relative bg-bg1 border border-border rounded-xs shadow-xl max-w-4xl w-full max-h-[85vh] overflow-y-auto;
+	}
+	.preview-panel {
+		@apply flex-1 min-w-0 flex flex-col;
+	}
 }
 
 @layer base {
@@ -173,6 +173,7 @@
 	}
 }
 
-html, body {
-    overflow: hidden;
+html,
+body {
+	overflow: hidden;
 }

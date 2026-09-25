@@ -34,71 +34,95 @@ import { $isHeadingNode } from "@lexical/rich-text";
 const EDITOR_ID = "post-editor";
 
 export function textEditor(): string {
-	return `
-    <div class="text-editor-wrapper w-full flex flex-col gap-2">
-      <p class="text-fg2">Description</p>
+	return /* HTML */ `
+		<div class="text-editor-wrapper w-full flex flex-col gap-2">
+			<p class="text-fg2">Description</p>
 
-      <div class="border border-border rounded-xs overflow-hidden">
-        <div class="toolbar flex items-center gap-1 px-3 py-2 border-b border-border flex-wrap bg-bg3">
-          <button type="button" data-cmd="undo" class="toolbar-btn">
-            <i data-lucide="undo2" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="redo" class="toolbar-btn">
-            <i data-lucide="redo2" class="w-4 h-4"></i>
-          </button>
+			<div class="border border-border rounded-xs overflow-hidden">
+				<div
+					class="toolbar flex items-center gap-1 px-3 py-2 border-b border-border flex-wrap bg-bg3"
+				>
+					<button type="button" data-cmd="undo" class="toolbar-btn">
+						<i data-lucide="undo2" class="w-4 h-4"></i>
+					</button>
+					<button type="button" data-cmd="redo" class="toolbar-btn">
+						<i data-lucide="redo2" class="w-4 h-4"></i>
+					</button>
 
-          <div class="w-px h-5 bg-separator mx-1"></div>
+					<div class="w-px h-5 bg-separator mx-1"></div>
 
-          <div class="relative toolbar-select">
-            <select data-cmd="block-type" class="appearance-none pr-6 cursor-pointer">
-              <option value="paragraph">Paragraph</option>
-              <option value="h1">Heading 1</option>
-              <option value="h2">Heading 2</option>
-              <option value="h3">Heading 3</option>
-            </select>
-            <i data-lucide="chevron-down" class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4"></i>
-          </div>
+					<div class="relative toolbar-select">
+						<select
+							data-cmd="block-type"
+							class="appearance-none pr-6 cursor-pointer"
+						>
+							<option value="paragraph">Paragraph</option>
+							<option value="h1">Heading 1</option>
+							<option value="h2">Heading 2</option>
+							<option value="h3">Heading 3</option>
+						</select>
+						<i
+							data-lucide="chevron-down"
+							class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4"
+						></i>
+					</div>
 
-          <div class="w-px h-5 bg-separator mx-1"></div>
+					<div class="w-px h-5 bg-separator mx-1"></div>
 
-          <button type="button" data-cmd="bold" class="toolbar-btn">
-            <i data-lucide="bold" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="italic" class="toolbar-btn">
-            <i data-lucide="italic" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="underline" class="toolbar-btn">
-            <i data-lucide="underline" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="strikethrough" class="toolbar-btn">
-            <i data-lucide="strikethrough" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="code" class="toolbar-btn">
-            <i data-lucide="code" class="w-4 h-4"></i>
-          </button>
+					<button type="button" data-cmd="bold" class="toolbar-btn">
+						<i data-lucide="bold" class="w-4 h-4"></i>
+					</button>
+					<button type="button" data-cmd="italic" class="toolbar-btn">
+						<i data-lucide="italic" class="w-4 h-4"></i>
+					</button>
+					<button
+						type="button"
+						data-cmd="underline"
+						class="toolbar-btn"
+					>
+						<i data-lucide="underline" class="w-4 h-4"></i>
+					</button>
+					<button
+						type="button"
+						data-cmd="strikethrough"
+						class="toolbar-btn"
+					>
+						<i data-lucide="strikethrough" class="w-4 h-4"></i>
+					</button>
+					<button type="button" data-cmd="code" class="toolbar-btn">
+						<i data-lucide="code" class="w-4 h-4"></i>
+					</button>
 
-          <div class="w-px h-5 bg-separator mx-1"></div>
+					<div class="w-px h-5 bg-separator mx-1"></div>
 
-          <button type="button" data-cmd="bullet-list" class="toolbar-btn">
-            <i data-lucide="list" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="ordered-list" class="toolbar-btn">
-            <i data-lucide="list-ordered" class="w-4 h-4"></i>
-          </button>
-          <button type="button" data-cmd="quote" class="toolbar-btn">
-            <i data-lucide="quote" class="w-4 h-4"></i>
-          </button>
-        </div>
+					<button
+						type="button"
+						data-cmd="bullet-list"
+						class="toolbar-btn"
+					>
+						<i data-lucide="list" class="w-4 h-4"></i>
+					</button>
+					<button
+						type="button"
+						data-cmd="ordered-list"
+						class="toolbar-btn"
+					>
+						<i data-lucide="list-ordered" class="w-4 h-4"></i>
+					</button>
+					<button type="button" data-cmd="quote" class="toolbar-btn">
+						<i data-lucide="quote" class="w-4 h-4"></i>
+					</button>
+				</div>
 
-        <div
-          id="${EDITOR_ID}"
-          class="editor-input min-h-60 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty text-body-md hover:bg-bg3/60 transition-colors"
-          contenteditable="true"
-          data-placeholder="Start typing here..."
-        ></div>
-      </div>
-    </div>
-  `;
+				<div
+					id="${EDITOR_ID}"
+					class="editor-input min-h-60 px-4 py-3 text-fg1 outline-none bg-bg2 is-empty text-body-md hover:bg-bg3/60 transition-colors"
+					contenteditable="true"
+					data-placeholder="Start typing here..."
+				></div>
+			</div>
+		</div>
+	`;
 }
 
 let editorInstance: LexicalEditor | null = null;

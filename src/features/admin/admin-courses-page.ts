@@ -9,5 +9,5 @@ export function AdminCoursesPage() {
             ${adminHeader()}
         </div>
     `;
-    initIcons();
+	initIcons();
 }

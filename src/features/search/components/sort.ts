@@ -45,33 +45,53 @@ document.addEventListener("click", (e) => {
 });
 
 export function relevanceSort(): string {
-	return `
-    <div class="relative" id="relevance-dropdown">
-      <button class="text-fg3 text-body-md font-medium flex items-center gap-2 min-w-28 hover:bg-bg3 px-3 py-1 rounded-xs transition-colors" id="relevance-trigger">
-        <span id="relevance-label">Relevant</span>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-fg3"></i>
-      </button>
-      <div class="absolute hidden flex-col bg-bg2 text-fg3 text-body-md border border-border rounded-xs mt-2 z-10 min-w-28" id="relevance-menu">
-        <button class="select-button" data-value="relevant">Relevant</button>
-        <button class="select-button" data-value="trending">Trending</button>
-        <button class="select-button" data-value="top">Top</button>
-      </div>
-    </div>
-    `;
+	return /* HTML */ `
+		<div class="relative" id="relevance-dropdown">
+			<button
+				class="text-fg3 text-body-md font-medium flex items-center gap-2 min-w-28 hover:bg-bg3 px-3 py-1 rounded-xs transition-colors"
+				id="relevance-trigger"
+			>
+				<span id="relevance-label">Relevant</span>
+				<i data-lucide="chevron-down" class="w-4 h-4 text-fg3"></i>
+			</button>
+			<div
+				class="absolute hidden flex-col bg-bg2 text-fg3 text-body-md border border-border rounded-xs mt-2 z-10 min-w-28"
+				id="relevance-menu"
+			>
+				<button class="select-button" data-value="relevant">
+					Relevant
+				</button>
+				<button class="select-button" data-value="trending">
+					Trending
+				</button>
+				<button class="select-button" data-value="top">Top</button>
+			</div>
+		</div>
+	`;
 }
 
 export function dateSort(): string {
-	return `
-    <div class="relative" id="date-dropdown">
-      <button class="text-fg3 text-body-md font-medium flex items-center gap-2 min-w-28 hover:bg-bg3 px-3 py-1 rounded-xs transition-colors" id="date-trigger">
-        <span id="date-label">All time</span>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-fg3"></i>
-      </button>
-      <div class="absolute hidden flex-col bg-bg2 text-fg3 text-body-md border border-border rounded-xs mt-2 z-10 min-w-28" id="date-menu">
-        <button class="select-button" data-value="all">All time</button>
-        <button class="select-button" data-value="newest">Newest</button>
-        <button class="select-button" data-value="oldest">Oldest</button>
-      </div>
-    </div>
-    `;
+	return /* HTML */ `
+		<div class="relative" id="date-dropdown">
+			<button
+				class="text-fg3 text-body-md font-medium flex items-center gap-2 min-w-28 hover:bg-bg3 px-3 py-1 rounded-xs transition-colors"
+				id="date-trigger"
+			>
+				<span id="date-label">All time</span>
+				<i data-lucide="chevron-down" class="w-4 h-4 text-fg3"></i>
+			</button>
+			<div
+				class="absolute hidden flex-col bg-bg2 text-fg3 text-body-md border border-border rounded-xs mt-2 z-10 min-w-28"
+				id="date-menu"
+			>
+				<button class="select-button" data-value="all">All time</button>
+				<button class="select-button" data-value="newest">
+					Newest
+				</button>
+				<button class="select-button" data-value="oldest">
+					Oldest
+				</button>
+			</div>
+		</div>
+	`;
 }

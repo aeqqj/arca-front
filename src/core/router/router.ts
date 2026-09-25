@@ -17,7 +17,7 @@ document.addEventListener("click", (e) => {
 export const urlLocationHandler = () => {
 	let location = window.location.pathname;
 
-    console.log("current path:", location);
+	console.log("current path:", location);
 
 	if (location.length == 0) {
 		location = "/";
