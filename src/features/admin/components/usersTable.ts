@@ -1,60 +1,77 @@
 import avatarPlaceholder from "/dog.png";
 
 export interface User {
-    id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-    role: string;
-    department: string;
-    course: string;
-    created: string;
+	id: number;
+	first_name: string;
+	last_name: string;
+	email: string;
+	role: string;
+	department: string;
+	course: string;
+	created: string;
 }
 
 export interface SortConfig {
-    field: string;
-    direction: "asc" | "desc";
+	field: string;
+	direction: "asc" | "desc";
 }
 
 function sortIndicator(field: string, sort: SortConfig): string {
-    if (sort.field === field && sort.direction === "asc") {
-        return '<i data-lucide="arrow-up" class="w-3 h-3 ml-1 inline"></i>';
-    }
-    if (sort.field === field && sort.direction === "desc") {
-        return '<i data-lucide="arrow-down" class="w-3 h-3 ml-1 inline"></i>';
-    }
-    return "";
+	if (sort.field === field && sort.direction === "asc") {
+		return '<i data-lucide="arrow-up" class="w-3 h-3 ml-1 inline"></i>';
+	}
+	if (sort.field === field && sort.direction === "desc") {
+		return '<i data-lucide="arrow-down" class="w-3 h-3 ml-1 inline"></i>';
+	}
+	return "";
 }
 
 export function usersTable(users: User[], sort: SortConfig) {
-    const thClass = "cursor-pointer select-none hover:text-fg2 transition-colors";
+	const thClass =
+		"cursor-pointer select-none hover:text-fg2 transition-colors";
 
-    return `
-     <table class="data-table w-full table-layout-fixed">
-        <colgroup>
-            <col class="w-[5%]" />
-            <col class="w-[20%]" />
-            <col class="w-[22%]" />
-            <col class="w-[8%]" />
-            <col class="w-[10%]" />
-            <col class="w-[10%]" />
-            <col class="w-[15%]" />
-            <col class="w-[10%]" />
-        </colgroup>
-        <thead>
-           <tr>
-                <th class="${thClass}" data-sort="id">ID${sortIndicator("id", sort)}</th>
-                <th class="${thClass}" data-sort="name">Name${sortIndicator("name", sort)}</th>
-                <th class="${thClass}" data-sort="email">Email${sortIndicator("email", sort)}</th>
-                <th class="${thClass}" data-sort="role">Role${sortIndicator("role", sort)}</th>
-                <th class="${thClass}" data-sort="department">Department${sortIndicator("department", sort)}</th>
-                <th class="${thClass}" data-sort="course">Course${sortIndicator("course", sort)}</th>
-                <th class="${thClass}" data-sort="created">Created${sortIndicator("created", sort)}</th>
-                <th class="text-right">Actions</th>
-           </tr>
-        </thead>
-        <tbody>
-            ${users.map(user => `
+	return /* HTML */ `
+		<table class="data-table w-full table-layout-fixed">
+			<colgroup>
+				<col class="w-[5%]" />
+				<col class="w-[20%]" />
+				<col class="w-[22%]" />
+				<col class="w-[8%]" />
+				<col class="w-[10%]" />
+				<col class="w-[10%]" />
+				<col class="w-[15%]" />
+				<col class="w-[10%]" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="${thClass}" data-sort="id">
+						ID${sortIndicator("id", sort)}
+					</th>
+					<th class="${thClass}" data-sort="name">
+						Name${sortIndicator("name", sort)}
+					</th>
+					<th class="${thClass}" data-sort="email">
+						Email${sortIndicator("email", sort)}
+					</th>
+					<th class="${thClass}" data-sort="role">
+						Role${sortIndicator("role", sort)}
+					</th>
+					<th class="${thClass}" data-sort="department">
+						Department${sortIndicator("department", sort)}
+					</th>
+					<th class="${thClass}" data-sort="course">
+						Course${sortIndicator("course", sort)}
+					</th>
+					<th class="${thClass}" data-sort="created">
+						Created${sortIndicator("created", sort)}
+					</th>
+					<th class="text-right">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				${users
+					.map(
+						(user) => `
                 <tr class="hover:bg-bg2/90 transition-colors">
                     <td class="text-fg4 truncate">${user.id}</td>
                     <td>
@@ -64,7 +81,7 @@ export function usersTable(users: User[], sort: SortConfig) {
                         </div>
                     </td>
                     <td class="text-fg3 truncate">${user.email}</td>
-                    <td class="${user.role === 'ADMIN' ? 'text-blue-200' : 'text-fg4'} truncate">${user.role}</td>
+                    <td class="${user.role === "ADMIN" ? "text-blue-200" : "text-fg4"} truncate">${user.role}</td>
                     <td class="text-fg3 truncate">${user.department}</td>
                     <td class="text-fg3 truncate">${user.course}</td>
                     <td class="text-fg4 truncate">${user.created}</td>
@@ -74,16 +91,18 @@ export function usersTable(users: User[], sort: SortConfig) {
                         </button>
                     </td>
                 </tr>
-            `).join('')}
-        </tbody>
-      </table>
-    `;
+            `,
+					)
+					.join("")}
+			</tbody>
+		</table>
+	`;
 }
 
 export function bindUserTableSort(onSort: (field: string) => void) {
-    document.querySelectorAll("[data-sort]").forEach(el => {
-        el.addEventListener("click", () => {
-            onSort(el.getAttribute("data-sort")!);
-        });
-    });
+	document.querySelectorAll("[data-sort]").forEach((el) => {
+		el.addEventListener("click", () => {
+			onSort(el.getAttribute("data-sort")!);
+		});
+	});
 }

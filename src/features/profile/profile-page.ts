@@ -1,7 +1,7 @@
 import { initIcons } from "../../shared/icons.ts";
 import { header } from "../../shared/components/header.ts";
 import { sideBar } from "../../shared/components/sideBar.ts";
-import { post } from "./../../shared/components/post.ts"; 
+import { post } from "./../../shared/components/post.ts";
 import { announcements } from "./components/announcements.ts";
 import { profile } from "./components/profile.ts";
 import { trending } from "./components/trending.ts";
@@ -40,6 +40,6 @@ export function ProfilePage() {
             </div>
         </div>
     `;
-    initIcons();
-    bindYoutubeLinks(app);
+	initIcons();
+	bindYoutubeLinks(app);
 }

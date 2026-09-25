@@ -85,7 +85,10 @@ function bindRowClicks() {
 		.forEach((row) => {
 			row.addEventListener("click", () => {
 				const id = Number(row.dataset.postId);
-				selectedPost = selectedPost?.id === id ? null : mockPosts.find((p) => p.id === id) ?? null;
+				selectedPost =
+					selectedPost?.id === id
+						? null
+						: (mockPosts.find((p) => p.id === id) ?? null);
 				renderPage();
 			});
 		});

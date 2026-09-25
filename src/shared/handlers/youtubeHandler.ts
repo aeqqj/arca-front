@@ -1,6 +1,8 @@
 export function bindYoutubeLinks(root: HTMLElement) {
 	root.addEventListener("click", (e) => {
-		const thumb = (e.target as HTMLElement).closest<HTMLElement>("[data-yt-thumb]");
+		const thumb = (e.target as HTMLElement).closest<HTMLElement>(
+			"[data-yt-thumb]",
+		);
 		if (!thumb) return;
 
 		const id = thumb.dataset.videoId;

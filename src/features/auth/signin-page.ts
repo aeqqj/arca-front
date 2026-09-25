@@ -2,7 +2,7 @@ import { initIcons } from "../../shared/icons.ts";
 import { passwordToggle } from "./handler/passwordToggle.ts";
 
 export function SignInPage() {
-    document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+	document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <section class="flex-1 flex justify-center items-center select-none text-foreground0 text-fg1">
             <div class="w-94 flex flex-col gap-6">
                 <div class="flex items-baseline gap-4">
@@ -30,6 +30,6 @@ export function SignInPage() {
             </div>
         </section>
     `;
-    initIcons();
-    passwordToggle();
+	initIcons();
+	passwordToggle();
 }
