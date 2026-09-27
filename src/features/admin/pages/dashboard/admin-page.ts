@@ -1,7 +1,12 @@
-import { initIcons } from "../../shared/icons.ts";
-import { adminHeader } from "./components/adminHeader.ts";
-import { adminSideBar } from "./components/adminSideBar.ts";
-import { statCard } from "./components/statCard.ts";
+import { initIcons } from "../../../../shared/icons.ts";
+import { adminHeader } from "../../components/layout/adminHeader.ts";
+import { adminSideBar } from "../../components/layout/adminSideBar.ts";
+import { statCard } from "../../components/dashboard/statCard.ts";
+import {
+	getMockPendingPosts,
+	mockTags,
+	recentActivities,
+} from "./mock-data.ts";
 
 export function AdminPage() {
 	document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
@@ -87,8 +92,9 @@ async function loadStats() {
 	let pendingCount = 0;
 
 	try {
-		const { api } = await import("../../core/api/api.ts");
-		const { ADMIN, POST } = await import("../../core/api/endpoints.ts");
+		const { api } = await import("../../../../core/api/api.ts");
+		const { ADMIN, POST } =
+			await import("../../../../core/api/endpoints.ts");
 
 		const [users, pendingPosts] = await Promise.all([
 			api.get<any[]>(ADMIN.USERS).catch(() => []),
@@ -111,19 +117,11 @@ async function loadStats() {
 }
 
 async function loadTagDistribution() {
-	const mockTags = [
-		{ tag: "Algorithms and Complexities", count: 12 },
-		{ tag: "Web Development", count: 8 },
-		{ tag: "Data Structures and Algorithms", count: 6 },
-		{ tag: "Operating Systems", count: 4 },
-		{ tag: "Software Engineering", count: 3 },
-	];
-
 	let tags: { tag: string; count: number }[] = [];
 
 	try {
-		const { api } = await import("../../core/api/api.ts");
-		const { POST } = await import("../../core/api/endpoints.ts");
+		const { api } = await import("../../../../core/api/api.ts");
+		const { POST } = await import("../../../../core/api/endpoints.ts");
 		const posts = await api.get<any[]>(POST.BASE);
 
 		const tagMap = new Map<string, number>();
@@ -176,35 +174,7 @@ function renderTagDistribution(tags: { tag: string; count: number }[]) {
 function renderRecentActivity() {
 	const container = document.getElementById("recent-activity")!;
 
-	const activities = [
-		{
-			icon: "file-text",
-			text: '<span>John Doe</span> posted <span class="text-fg-link">"B-trees in Go vs C"</span>',
-			time: "2h ago",
-		},
-		{
-			icon: "user-plus",
-			text: "<span>Jane Smith</span> joined the platform",
-			time: "3h ago",
-		},
-		{
-			icon: "check",
-			text: '<span -fg1">Admin</span> approved a post by <span class="text-fg1">Mike Chen</span>',
-			time: "5h ago",
-		},
-		{
-			icon: "x",
-			text: '<span class="text-fg1">Admin</span> rejected a post by <span class="text-fg1">Anna Reyes</span>',
-			time: "1d ago",
-		},
-		{
-			icon: "file-text",
-			text: '<span class="text-fg1">Carlos Garcia</span> posted <span class="text-fg-link">"React vs vanilla JS"</span>',
-			time: "3d ago",
-		},
-	];
-
-	container.innerHTML = activities
+	container.innerHTML = recentActivities
 		.map(
 			(a) => `
         <div class="flex items-start gap-3">
@@ -222,65 +192,17 @@ function renderRecentActivity() {
 }
 
 async function loadPendingPosts() {
-	const mockPosts = [
-		{
-			id: 101,
-			title: "google made btrees in golang instead of c and so should you go is good its better than everything",
-			firstName: "John",
-			lastName: "Doe",
-			departmentName: "DCISM",
-			postTag: "Algorithms and Complexities",
-			createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-		},
-		{
-			id: 102,
-			title: "docker containers are basically just chroot with marketing and everyone acts like its revolutionary",
-			firstName: "Jane",
-			lastName: "Smith",
-			departmentName: "DCISM",
-			postTag: "Software Engineering",
-			createdAt: new Date(Date.now() - 5 * 3600000).toISOString(),
-		},
-		{
-			id: 103,
-			title: "arcawerawer waerwarware taewrwaerwar eoirwaorejaorejojwajre  aeworjwaoiejrowaerwiraejr ypescript is just javascript wearing a suit and it still lies to you at runtime sometimes anyway, so do this instead retards",
-			firstName: "Mike",
-			lastName: "Chen",
-			departmentName: "DCISM",
-			postTag: "Operating Systems",
-			createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
-		},
-		{
-			id: 104,
-			title: "SQL query optimization",
-			firstName: "Anna",
-			lastName: "Reyes",
-			departmentName: "DCISM",
-			postTag: "Data Structures and Algorithms",
-			createdAt: new Date(Date.now() - 48 * 3600000).toISOString(),
-		},
-		{
-			id: 105,
-			title: "React vs vanilla JS",
-			firstName: "Carlos",
-			lastName: "Garcia",
-			departmentName: "DCISM",
-			postTag: "Web Development",
-			createdAt: new Date(Date.now() - 72 * 3600000).toISOString(),
-		},
-	];
-
 	let posts: any[] = [];
 	try {
-		const { api } = await import("../../core/api/api.ts");
-		const { POST } = await import("../../core/api/endpoints.ts");
+		const { api } = await import("../../../../core/api/api.ts");
+		const { POST } = await import("../../../../core/api/endpoints.ts");
 		posts = await api.get<any[]>(POST.BY_PENDING);
 	} catch (e) {
 		console.warn("API unavailable, using mock data:", e);
 	}
 
 	if (posts.length === 0) {
-		posts = mockPosts;
+		posts = getMockPendingPosts();
 	}
 
 	renderPendingPosts(posts);
@@ -339,8 +261,8 @@ function bindPostActions() {
 
 async function handlePostAction(postId: number, approved: boolean) {
 	try {
-		const { api } = await import("../../core/api/api.ts");
-		const { POST } = await import("../../core/api/endpoints.ts");
+		const { api } = await import("../../../../core/api/api.ts");
+		const { POST } = await import("../../../../core/api/endpoints.ts");
 
 		await api.post(POST.APPROVE(String(postId)), {
 			approved,

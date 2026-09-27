@@ -1,29 +1,13 @@
 import avatarPlaceholder from "/dog.png";
-import { link, githubLink } from "../../../shared/components/link.ts";
-import { attachment } from "../../../shared/components/attachment.ts";
+import { link, githubLink } from "../../../../shared/components/link.ts";
+import { attachment } from "../../../../shared/components/attachment.ts";
+import type { Post } from "./postTypes.ts";
 
-export interface Post {
-	id: number;
-	title: string;
-	content: string;
-	firstName: string;
-	lastName: string;
-	departmentName: string;
-	postTag: string;
-	status: string;
-	createdAt: string;
-	upvoteCount: number;
-	downvoteCount: number;
-	hasGithub?: boolean;
-	hasLink?: boolean;
-	attachmentCount?: number;
-}
-
-export function postFullView(post: Post) {
+export function postFullView(post: Post, showStatus = true) {
 	return /* HTML */ `
 		<div class="w-full p-6">
 			<div
-				class="w-4xl mx-auto h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs shadow-md"
+				class="w-full max-w-4xl mx-auto h-fit bg-bg2 border border-border flex flex-col p-6 gap-4 rounded-xs shadow-md"
 			>
 				<div class="flex gap-4">
 					<img
@@ -38,10 +22,11 @@ export function postFullView(post: Post) {
 								>${post.firstName} ${post.lastName}</span
 							>
 							<span class="text-fg4 text-body-md"
-								>${formatRelativeTime(post.createdAt)}
-								<span class="text-fg5"
-									>[${formatStatus(post.status)}]</span
-								></span
+								>${formatRelativeTime(
+									post.createdAt,
+								)}${showStatus
+									? ` <span class="text-fg5">[${formatStatus(post.status)}]</span>`
+									: ""}</span
 							>
 						</div>
 						<div
