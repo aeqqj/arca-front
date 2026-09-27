@@ -5,10 +5,11 @@ import { ProfilePage } from "../../features/profile/profile-page.ts";
 import { CreatePostPage } from "../../features/create-post/create-post-page.ts";
 import { PostPage } from "../../features/post/post-page.ts";
 import { SearchPage } from "../../features/search/search-page.ts";
-import { AdminPage } from "../../features/admin/admin-page.ts";
-import { AdminUsersPage } from "../../features/admin/admin-users-page.ts";
-import { AdminPostsPage } from "../../features/admin/admin-posts-page.ts";
-import { AdminCoursesPage } from "../../features/admin/admin-courses-page.ts";
+import { AdminPage } from "../../features/admin/pages/dashboard/admin-page.ts";
+import { AdminUsersPage } from "../../features/admin/pages/users/admin-users-page.ts";
+import { AdminPostsPage } from "../../features/admin/pages/posts/admin-posts-page.ts";
+import { AdminPendingPostsPage } from "../../features/admin/pages/pending-posts/admin-pending-posts-page.ts";
+import { AdminCoursesPage } from "../../features/admin/pages/courses/admin-courses-page.ts";
 
 export const routes: Record<string, { page: () => void }> = {
 	"/": {
@@ -40,6 +41,9 @@ export const routes: Record<string, { page: () => void }> = {
 	},
 	"/admin/posts": {
 		page: AdminPostsPage,
+	},
+	"/admin/pending-posts": {
+		page: AdminPendingPostsPage,
 	},
 	"/admin/courses": {
 		page: AdminCoursesPage,

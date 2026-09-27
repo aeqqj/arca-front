@@ -4,7 +4,12 @@ export function adminSideBar() {
 	const navItems = [
 		{ href: "/admin", icon: "layout-grid", label: "Dashboard" },
 		{ href: "/admin/users", icon: "users", label: "Users" },
-		{ href: "/admin/posts", icon: "square-pen", label: "Posts" },
+		{
+			href: "/admin/pending-posts",
+			icon: "square-pen",
+			label: "Pending Posts",
+		},
+		{ href: "/admin/posts", icon: "file-text", label: "Posts" },
 		{ href: "/admin/courses", icon: "book-open-text", label: "Courses" },
 	];
 
