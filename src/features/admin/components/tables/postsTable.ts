@@ -1,4 +1,5 @@
 import type { Post } from "../posts/postTypes.ts";
+import { tableEmptyRow } from "./tableEmptyRow.ts";
 
 export type PostSortField =
 	| "title"
@@ -44,7 +45,7 @@ function tableHeader(
 
 	return /* HTML */ `
 		<th
-			class="cursor-pointer select-none hover:text-fg1 transition-colors ${className}"
+			class="${className}"
 			data-post-sort="${field}"
 			aria-sort="${sort.field === field
 				? sort.direction === "asc"
@@ -63,7 +64,7 @@ export function postsTable(
 	sort?: PostSortConfig,
 ) {
 	return /* HTML */ `
-		<table class="data-table w-full table-layout-fixed">
+		<table class="data-table data-table--posts">
 			<colgroup>
 				<col class="w-[30%]" />
 				<col class="w-[18%]" />
@@ -82,11 +83,11 @@ export function postsTable(
 			</thead>
 			<tbody>
 				${posts.length === 0
-					? '<tr><td colspan="5" class="text-center text-fg5 py-12">No posts found</td></tr>'
+					? tableEmptyRow(5, "No posts found")
 					: posts
 							.map(
 								(post) => `
-					<tr class="hover:bg-bg2/90 transition-colors ${selectedId === post.id ? "row-selected" : ""}" data-post-id="${post.id}">
+					<tr class="${selectedId === post.id ? "row-selected" : ""}" data-post-id="${post.id}">
 						<td class="text-fg2 truncate">${post.title}</td>
 						<td class="text-fg3 truncate">${post.firstName} ${post.lastName}</td>
 						<td class="text-fg3 truncate">${post.departmentName}</td>
@@ -101,10 +102,25 @@ export function postsTable(
 	`;
 }
 
+export function updatePostTableSelection(
+	root: ParentNode,
+	selectedId: number | null,
+): void {
+	root.querySelectorAll<HTMLTableRowElement>("[data-post-id]").forEach(
+		(row) => {
+			row.classList.toggle(
+				"row-selected",
+				Number(row.dataset.postId) === selectedId,
+			);
+		},
+	);
+}
+
 export function bindPostTableSort(
 	onSort: (field: PostSortField) => void,
+	root: ParentNode = document,
 ): void {
-	document.querySelectorAll<HTMLElement>("[data-post-sort]").forEach((el) => {
+	root.querySelectorAll<HTMLElement>("[data-post-sort]").forEach((el) => {
 		el.addEventListener("click", () => {
 			onSort(el.dataset.postSort as PostSortField);
 		});

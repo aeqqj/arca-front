@@ -1,16 +1,45 @@
 import { routes } from "./routes.ts";
 
 document.addEventListener("click", (e) => {
-	const target = e.target as HTMLAnchorElement;
+	if (
+		e.defaultPrevented ||
+		e.button !== 0 ||
+		e.metaKey ||
+		e.ctrlKey ||
+		e.shiftKey ||
+		e.altKey
+	) {
+		return;
+	}
 
-	if (!target!.matches("a[href^='/']")) {
+	const eventTarget = e.target;
+	if (!(eventTarget instanceof Element)) {
+		return;
+	}
+
+	const anchor = eventTarget.closest<HTMLAnchorElement>("a[href]");
+	if (!anchor) {
+		return;
+	}
+
+	const href = anchor.getAttribute("href");
+	if (
+		!href?.startsWith("/") ||
+		href.startsWith("//") ||
+		anchor.hasAttribute("download") ||
+		(anchor.target && anchor.target !== "_self") ||
+		anchor.relList.contains("external")
+	) {
+		return;
+	}
+
+	const url = new URL(anchor.href, window.location.href);
+	if (url.origin !== window.location.origin) {
 		return;
 	}
 
 	e.preventDefault();
-
-	window.history.pushState({}, "", target!.href);
-
+	window.history.pushState({}, "", url.href);
 	urlLocationHandler();
 });
 

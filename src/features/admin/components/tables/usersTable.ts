@@ -1,4 +1,5 @@
 import avatarPlaceholder from "/dog.png";
+import { tableEmptyRow } from "./tableEmptyRow.ts";
 
 export interface User {
 	id: number;
@@ -27,11 +28,8 @@ function sortIndicator(field: string, sort: UserSortConfig): string {
 }
 
 export function usersTable(users: User[], sort: UserSortConfig) {
-	const thClass =
-		"cursor-pointer select-none hover:text-fg2 transition-colors";
-
 	return /* HTML */ `
-		<table class="data-table w-full table-layout-fixed">
+		<table class="data-table data-table--users">
 			<colgroup>
 				<col class="w-[5%]" />
 				<col class="w-[20%]" />
@@ -44,35 +42,31 @@ export function usersTable(users: User[], sort: UserSortConfig) {
 			</colgroup>
 			<thead>
 				<tr>
-					<th class="${thClass}" data-sort="id">
-						ID${sortIndicator("id", sort)}
-					</th>
-					<th class="${thClass}" data-sort="name">
-						Name${sortIndicator("name", sort)}
-					</th>
-					<th class="${thClass}" data-sort="email">
+					<th data-sort="id">ID${sortIndicator("id", sort)}</th>
+					<th data-sort="name">Name${sortIndicator("name", sort)}</th>
+					<th data-sort="email">
 						Email${sortIndicator("email", sort)}
 					</th>
-					<th class="${thClass}" data-sort="role">
-						Role${sortIndicator("role", sort)}
-					</th>
-					<th class="${thClass}" data-sort="department">
+					<th data-sort="role">Role${sortIndicator("role", sort)}</th>
+					<th data-sort="department">
 						Department${sortIndicator("department", sort)}
 					</th>
-					<th class="${thClass}" data-sort="course">
+					<th data-sort="course">
 						Course${sortIndicator("course", sort)}
 					</th>
-					<th class="${thClass}" data-sort="created">
+					<th data-sort="created">
 						Created${sortIndicator("created", sort)}
 					</th>
 					<th class="text-right">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				${users
-					.map(
-						(user) => `
-                <tr class="hover:bg-bg2/90 transition-colors">
+				${users.length === 0
+					? tableEmptyRow(8, "No users found")
+					: users
+							.map(
+								(user) => `
+                <tr>
                     <td class="text-fg4 truncate">${user.id}</td>
                     <td>
                         <div class="flex items-center gap-2">
@@ -86,21 +80,24 @@ export function usersTable(users: User[], sort: UserSortConfig) {
                     <td class="text-fg3 truncate">${user.course}</td>
                     <td class="text-fg4 truncate">${user.created}</td>
                     <td class="text-right">
-                        <button class="p-1.5 rounded-xs hover:bg-bg3 transition-colors">
+                        <button class="data-table-action">
                             <i data-lucide="ellipsis" class="w-4 h-4"></i>
                         </button>
                     </td>
                 </tr>
             `,
-					)
-					.join("")}
+							)
+							.join("")}
 			</tbody>
 		</table>
 	`;
 }
 
-export function bindUserTableSort(onSort: (field: string) => void) {
-	document.querySelectorAll("[data-sort]").forEach((el) => {
+export function bindUserTableSort(
+	onSort: (field: string) => void,
+	root: ParentNode = document,
+) {
+	root.querySelectorAll("[data-sort]").forEach((el) => {
 		el.addEventListener("click", () => {
 			onSort(el.getAttribute("data-sort")!);
 		});
