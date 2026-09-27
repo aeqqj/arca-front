@@ -3,6 +3,31 @@ export interface DropdownOption {
 	label: string;
 }
 
+function closeDropdown(menu: HTMLElement): void {
+	menu.classList.add("hidden");
+	const id = menu.dataset.dropdownMenu;
+	if (!id) return;
+
+	const chevron = document.querySelector<HTMLElement>(
+		`[data-dropdown-trigger="${id}"] [data-lucide="chevron-down"]`,
+	);
+	if (chevron) chevron.style.transform = "";
+}
+
+document.addEventListener("mousedown", (event) => {
+	if (!(event.target instanceof Node)) return;
+
+	document
+		.querySelectorAll<HTMLElement>("[data-dropdown-menu]")
+		.forEach((menu) => {
+			const id = menu.dataset.dropdownMenu;
+			const container = id
+				? document.getElementById(`dropdown-${id}`)
+				: null;
+			if (!container?.contains(event.target as Node)) closeDropdown(menu);
+		});
+});
+
 export function dropdown(
 	id: string,
 	value: string,
@@ -15,10 +40,14 @@ export function dropdown(
 		<div class="relative" id="dropdown-${id}">
 			<button
 				type="button"
-				class="flex items-center justify-between gap-2 w-38 px-3 py-2 rounded-xs border border-border bg-bg1 text-body-sm outline-none focus:border-fg4/40 hover:bg-bg2/90 transition-colors"
+				class="flex items-center justify-between gap-2 w-fit px-3 py-2 rounded-xs border border-border bg-bg1 text-body-sm outline-none focus:border-fg4/40 hover:bg-bg2/90 transition-colors"
 				data-dropdown-trigger="${id}"
 			>
-				<span class="${selected ? "text-fg1" : "text-fg-placeholder"}">
+				<span
+					class="${selected
+						? "text-fg1"
+						: "text-fg-placeholder"} whitespace-nowrap"
+				>
 					${selected ? selected.label : placeholder}
 				</span>
 				<i
@@ -73,7 +102,9 @@ export function bindDropdown(
 		const label = trigger.querySelector("span")!;
 		const option = options.find((o) => o.value === selectedValue);
 		label.textContent = option ? option.label : placeholder;
-		label.className = option ? "text-fg1" : "text-fg-placeholder";
+		label.className = option
+			? "text-fg1 whitespace-nowrap"
+			: "text-fg-placeholder whitespace-nowrap";
 
 		menu.querySelectorAll("[data-dropdown-value]").forEach((item) => {
 			const existingCheck = item.querySelector("[data-lucide='check']");
@@ -128,17 +159,5 @@ export function bindDropdown(
 				) as HTMLElement
 			).style.transform = "";
 		});
-	});
-
-	document.addEventListener("mousedown", (e: MouseEvent) => {
-		const container = document.getElementById(`dropdown-${id}`);
-		if (container && !container.contains(e.target as Node)) {
-			menu.classList.add("hidden");
-			(
-				trigger.querySelector(
-					"[data-lucide='chevron-down']",
-				) as HTMLElement
-			).style.transform = "";
-		}
 	});
 }

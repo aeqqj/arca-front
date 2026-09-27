@@ -42,8 +42,11 @@ import {
 	BarChart3,
 } from "lucide";
 
-export function initIcons() {
+export function initIcons(
+	root: Element | Document | DocumentFragment = document,
+) {
 	createIcons({
+		root,
 		icons: {
 			Search,
 			Shield,

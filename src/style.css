@@ -90,26 +90,55 @@
 	.dashboard-table td {
 		@apply text-fg2 text-body-md text-left p-4 border-b border-border min-w-0 overflow-hidden;
 	}
-	.dashboard-table tr:last-child td {
-		@apply border-b-0;
+	/* .dashboard-table tr:last-child td { */
+	/* 	@apply border-b-0; */
+	/* } */
+	.admin-table-container {
+		@apply w-full overflow-auto border border-border rounded-xs bg-bg2;
+	}
+	.admin-table-container .data-table {
+		@apply border-0 rounded-none;
 	}
 	.data-table {
 		@apply w-full bg-bg2 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
 	}
+	.data-table--users {
+		min-width: 60rem;
+	}
+	.data-table--posts {
+		min-width: 43.75rem;
+	}
+	.data-table--courses {
+		min-width: 45rem;
+	}
 	.data-table th {
-		@apply text-fg2 text-body-md font-medium text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
+		@apply text-fg2 text-body-md font-medium text-left align-middle py-3 px-4 border-b border-border min-w-0 overflow-hidden;
 	}
 	.data-table td {
-		@apply text-fg2 text-body-md text-left py-3 px-4 border-b border-border min-w-0 overflow-hidden;
+		@apply text-fg2 text-body-md text-left align-middle py-3 px-4 border-b border-border min-w-0 overflow-hidden;
 	}
-	.data-table tr:last-child td {
-		@apply border-b-0;
+	.data-table tbody tr {
+		@apply transition-colors;
+		height: 3.25rem;
+	}
+	.data-table tbody tr:not(.row-selected):hover {
+		@apply bg-bg3/50;
+	}
+	/* .data-table tr:last-child td { */
+	/* 	@apply border-b-0; */
+	/* } */
+	.data-table th[data-sort],
+	.data-table th[data-post-sort] {
+		@apply cursor-pointer select-none hover:text-fg1 transition-colors;
 	}
 	.data-table tr[data-post-id] {
 		@apply cursor-pointer;
 	}
 	.data-table tr.row-selected {
 		@apply bg-bg3;
+	}
+	.data-table-action {
+		@apply p-1.5 rounded-xs hover:bg-bg3 transition-colors;
 	}
 	.modal-backdrop {
 		@apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center;
