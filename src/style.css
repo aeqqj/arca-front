@@ -81,23 +81,246 @@
 	.select-button {
 		@apply px-4 py-3 text-left hover:bg-bg3 transition-colors;
 	}
+	.dashboard-content {
+		@apply grid flex-1 min-h-0 w-full max-w-[1600px] gap-3 overflow-hidden p-3 sm:gap-4 sm:p-4;
+		grid-template-rows: auto minmax(0, 0.9fr) minmax(0, 1fr);
+	}
+	.dashboard-stats-grid {
+		@apply grid min-w-0 grid-cols-3 gap-2 sm:gap-3;
+	}
+	.dashboard-stat-card {
+		@apply gap-2 p-3 sm:p-4;
+	}
+	.dashboard-stat-card > div:first-child {
+		@apply gap-1;
+	}
+	.dashboard-stat-card > div:first-child > div {
+		@apply h-7 w-7;
+	}
+	.dashboard-stat-card > p:last-child {
+		@apply text-2xl;
+	}
+	.dashboard-insights-grid {
+		@apply grid min-h-0 min-w-0 grid-cols-2 gap-3 sm:gap-4;
+	}
+	.dashboard-panel {
+		@apply flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xs border border-border bg-bg2;
+	}
+	.dashboard-panel-header {
+		@apply flex min-h-0 shrink-0 items-center border-b border-border px-3 py-2 sm:px-4;
+	}
+	.dashboard-panel-title {
+		@apply truncate text-body-sm font-medium tracking-tight text-fg1;
+	}
+	.dashboard-panel-body {
+		@apply min-h-0 flex-1 overflow-hidden p-3 sm:p-4;
+	}
+	.dashboard-panel-body--tags #tag-distribution {
+		@apply gap-2;
+	}
+	.dashboard-panel-body--activity {
+		@apply p-1;
+	}
+	.dashboard-tag-row {
+		@apply grid min-w-0 items-center gap-2;
+		grid-template-columns: minmax(0, 1fr) minmax(1.5rem, 2fr) 1.5rem;
+	}
+	.dashboard-tag-label {
+		@apply truncate text-label-sm text-fg3;
+	}
+	.dashboard-tag-track {
+		@apply h-1.5 overflow-hidden rounded-full bg-bg4;
+	}
+	.dashboard-tag-fill {
+		@apply h-full rounded-full bg-fg4;
+	}
+	.dashboard-tag-count {
+		@apply text-right text-label-sm tabular-nums text-fg2;
+	}
+	.dashboard-activity-item {
+		@apply flex min-w-0 items-center gap-2 border-b border-border px-2 py-1.5 last:border-b-0;
+	}
+	.dashboard-activity-icon {
+		@apply flex h-6 w-6 shrink-0 items-center justify-center rounded-xs border border-border bg-bg3 text-fg3;
+	}
+	.dashboard-activity-text {
+		@apply line-clamp-2 break-words text-label-sm leading-4 text-fg2;
+	}
+	.dashboard-activity-item .text-label-md {
+		@apply mt-0 text-label-sm;
+	}
 	.dashboard-table {
-		@apply w-full bg-bg1 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
+		@apply grid min-h-0 w-full min-w-0 flex-1 border border-border bg-bg1;
+		grid-template-rows: auto minmax(0, 1fr);
+	}
+	.dashboard-table colgroup {
+		display: none;
+	}
+	.dashboard-table thead,
+	.dashboard-table tbody {
+		@apply block min-w-0;
+	}
+	.dashboard-table tbody {
+		@apply min-h-0 overflow-y-auto overscroll-contain;
+		scrollbar-gutter: stable;
+	}
+	.dashboard-table thead tr,
+	.dashboard-table tbody tr {
+		@apply grid min-w-0;
+		grid-template-columns:
+			minmax(0, 30fr) minmax(0, 16fr) minmax(0, 12fr)
+			minmax(0, 14fr) minmax(0, 12fr) minmax(0, 14fr);
+	}
+	.dashboard-table tbody tr {
+		@apply transition-colors;
+	}
+	.dashboard-table tbody tr:hover {
+		@apply bg-bg3/50;
 	}
 	.dashboard-table th {
-		@apply text-fg2 text-body-md font-medium text-left p-4 border-b border-border min-w-0 overflow-hidden;
+		@apply text-fg3 text-label-sm font-medium text-left px-2 py-1.5 border-b border-border min-w-0 overflow-hidden;
 	}
 	.dashboard-table td {
-		@apply text-fg2 text-body-md text-left p-4 border-b border-border min-w-0 overflow-hidden;
+		@apply text-fg2 text-label-sm text-left px-2 py-1.5 border-b border-border min-w-0 overflow-hidden;
 	}
-	/* .dashboard-table tr:last-child td { */
-	/* 	@apply border-b-0; */
-	/* } */
+	.dashboard-table td[colspan] {
+		grid-column: 1 / -1;
+	}
+	.dashboard-cell-text {
+		@apply block truncate text-fg2;
+	}
+	.dashboard-tag-badge {
+		@apply inline-block max-w-full truncate rounded-xs border border-border bg-bg3 px-1.5 py-0.5 text-label-sm text-fg3;
+	}
+	.dashboard-reject-button,
+	.dashboard-approve-button {
+		@apply flex h-6 w-6 shrink-0 items-center justify-center rounded-xs border transition-colors;
+	}
+	.dashboard-reject-button {
+		@apply border-bad/25 text-bad hover:bg-bad/10;
+	}
+	.dashboard-approve-button {
+		@apply border-good/25 text-good hover:bg-good/10;
+	}
+	.dashboard-layout > aside {
+		transition: width 180ms ease;
+	}
+	@media (max-width: 767px) {
+		.dashboard-layout > aside {
+			@apply w-16;
+		}
+		.dashboard-layout > aside > div:first-child {
+			@apply justify-center px-2;
+		}
+		.dashboard-layout > aside > div:nth-child(2) {
+			@apply px-2;
+		}
+		.dashboard-layout > aside > div:nth-child(2) a {
+			@apply justify-center px-2;
+		}
+		.dashboard-layout > aside > div:nth-child(2) a span {
+			@apply sr-only;
+		}
+		.dashboard-layout > div > header {
+			@apply px-5;
+		}
+	}
+	@media (max-width: 639px) {
+		.dashboard-content {
+			@apply gap-2 p-2;
+		}
+		.dashboard-stats-grid {
+			@apply gap-1;
+		}
+		.dashboard-stat-card {
+			@apply gap-1 p-2;
+		}
+		.dashboard-stat-card > p:last-child {
+			@apply text-xl;
+		}
+		.dashboard-insights-grid {
+			@apply gap-2;
+		}
+		.dashboard-panel-header {
+			@apply px-2 py-1.5;
+		}
+		.dashboard-panel-body {
+			@apply p-2;
+		}
+		.dashboard-panel-body--activity {
+			@apply p-0;
+		}
+		.dashboard-activity-item {
+			@apply gap-1 px-1 py-1;
+		}
+		.dashboard-activity-icon {
+			@apply h-5 w-5;
+		}
+		.dashboard-activity-icon i {
+			@apply h-3 w-3;
+		}
+		.dashboard-table th,
+		.dashboard-table td {
+			@apply px-1 py-1;
+		}
+		.dashboard-table thead tr,
+		.dashboard-table tbody tr {
+			grid-template-columns: minmax(0, 48fr) minmax(0, 27fr) minmax(
+					0,
+					25fr
+				);
+		}
+		.dashboard-table th:nth-child(3),
+		.dashboard-table th:nth-child(4),
+		.dashboard-table th:nth-child(5),
+		.dashboard-table td:nth-child(3),
+		.dashboard-table td:nth-child(4),
+		.dashboard-table td:nth-child(5) {
+			display: none;
+		}
+		.dashboard-reject-button,
+		.dashboard-approve-button {
+			@apply h-5 w-5;
+		}
+		.dashboard-table td > div {
+			@apply gap-1;
+		}
+	}
+	.admin-page-content {
+		@apply flex-1 min-h-0 overflow-auto p-8 flex flex-col;
+	}
+	.admin-content-stack {
+		@apply my-auto;
+	}
 	.admin-table-container {
-		@apply w-full overflow-auto border border-border rounded-xs bg-bg2;
+		@apply w-full overflow-visible border border-border rounded-xs bg-bg2;
+	}
+	.admin-table-container--users {
+		min-width: 60rem;
+	}
+	.admin-table-container--posts {
+		min-width: 43.75rem;
+	}
+	.admin-table-container--courses {
+		min-width: 45rem;
+	}
+	.pending-posts-table-viewport {
+		@apply overflow-x-auto overflow-y-hidden;
+	}
+	.pending-posts-table-viewport .admin-table-container {
+		@apply h-full;
 	}
 	.admin-table-container .data-table {
 		@apply border-0 rounded-none;
+	}
+	.admin-post-table-layout {
+		@apply grid w-full gap-4;
+		grid-template-columns: minmax(0, 1fr);
+		min-width: 43.75rem;
+	}
+	.admin-post-table-layout:has(.admin-post-preview) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		min-width: 88.5rem;
 	}
 	.data-table {
 		@apply w-full bg-bg2 border-separate border-spacing-0 border border-border rounded-xs table-fixed;
@@ -139,6 +362,10 @@
 	}
 	.data-table-action {
 		@apply p-1.5 rounded-xs hover:bg-bg3 transition-colors;
+	}
+	.data-table--courses .data-table-action,
+	.data-table--users .data-table-action {
+		@apply p-1;
 	}
 	.modal-backdrop {
 		@apply fixed inset-0 bg-black/60 z-50 flex items-center justify-center;

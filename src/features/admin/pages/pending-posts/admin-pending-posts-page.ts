@@ -37,8 +37,10 @@ function renderPage() {
                 <div class="flex-1 overflow-hidden p-8 flex flex-col gap-3">
                     <div class="flex flex-1 min-h-0 gap-4">
                         <div class="w-1/2 min-w-0 flex flex-col gap-3">
-                            <div id="pending-posts-table-container" class="admin-table-container flex-1 min-h-0">
-                                ${postsTable(pagePosts, selectedPost?.id ?? null)}
+                            <div class="pending-posts-table-viewport flex-1 min-h-0">
+                                <div id="pending-posts-table-container" class="admin-table-container admin-table-container--posts">
+                                    ${postsTable(pagePosts, selectedPost?.id ?? null)}
+                                </div>
                             </div>
                             <div id="pending-posts-pagination-container">
                                 ${pagination({ id: "pending-posts", currentPage, totalItems: mockPosts.length, pageSize: PAGE_SIZE, showPageNumbers: true })}

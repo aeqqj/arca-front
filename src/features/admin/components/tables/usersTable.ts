@@ -81,7 +81,7 @@ export function usersTable(users: User[], sort: UserSortConfig) {
                     <td class="text-fg4 truncate">${user.created}</td>
                     <td class="text-right">
                         <button class="data-table-action">
-                            <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                            <i data-lucide="ellipsis" class="w-3 h-3"></i>
                         </button>
                     </td>
                 </tr>

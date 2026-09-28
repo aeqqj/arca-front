@@ -118,8 +118,8 @@ export function AdminCoursesPage() {
             ${adminSideBar()}
             <div class="flex flex-col flex-1 min-w-0">
                 ${adminHeader("Courses")}
-                <div class="flex-1 min-h-0 overflow-y-auto p-8 w-full">
-                    <div class="flex flex-col gap-3">
+                <div class="admin-page-content">
+                    <div class="admin-content-stack flex flex-col gap-3">
                         <div class="flex flex-wrap items-center gap-3">
                             <div class="flex-1">
                                 ${tableSearchBar({ value: searchQuery })}
@@ -128,7 +128,7 @@ export function AdminCoursesPage() {
                                 ${dropdown("filter-department", departmentFilter, departmentOptions, "All departments")}
                             </div>
                         </div>
-                        <div id="courses-table-container" class="admin-table-container"></div>
+                        <div id="courses-table-container" class="admin-table-container admin-table-container--courses"></div>
                         <div id="courses-pagination-container"></div>
                     </div>
                 </div>

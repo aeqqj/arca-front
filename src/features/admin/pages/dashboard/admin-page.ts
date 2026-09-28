@@ -10,56 +10,56 @@ import {
 
 export function AdminPage() {
 	document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-        <div class="h-full flex">
+        <div class="dashboard-layout h-full flex">
             ${adminSideBar()}
-            <div class="flex flex-col flex-1 min-w-0">
+            <div class="dashboard-main-column flex flex-col flex-1 min-w-0 min-h-0">
                 ${adminHeader("Dashboard")}
-                <div class="flex-1 overflow-y-auto p-8">
-                    <div class="flex flex-col gap-8 w-full h-full">
-                        <div class="flex gap-4">
+                <main class="dashboard-content">
+                        <section class="dashboard-stats-grid" aria-label="Dashboard statistics">
                             ${statCard("users")}
                             ${statCard("posts")}
                             ${statCard("pending")}
-                        </div>
+                        </section>
 
-                        <div class="flex gap-4">
-                            <div class="flex flex-1 flex-col gap-4">
-                                <div class="h-fit w-fit py-2 px-4 bg-bg3 border border-border">
-                                    <p class="text-fg3 font-medium">Post Tags Distribution</p>
-                                </div>
-                                <div class="h-full bg-bg2 border border-border rounded-xs p-6">
-                                    <div id="tag-distribution" class="flex flex-col gap-8">
+                        <div class="dashboard-insights-grid">
+                            <section class="dashboard-panel">
+                                <header class="dashboard-panel-header">
+                                    <h2 class="dashboard-panel-title">Post Tags Distribution</h2>
+                                </header>
+                                <div class="dashboard-panel-body dashboard-panel-body--tags">
+                                    <div id="tag-distribution" class="flex flex-col gap-5">
                                         <p class="text-fg5 text-body-sm">Loading...</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="h-full flex flex-1 flex-col gap-4">
-                                <div class="h-fit w-fit py-2 px-4 bg-bg3 border border-border">
-                                    <p class="text-fg3 font-medium">Recent Activity</p>
-                                </div>
-                                <div class="flex-1 bg-bg2 border border-border rounded-xs p-5">
-                                    <div id="recent-activity" class="flex flex-col gap-3">
+                            </section>
+
+                            <section class="dashboard-panel">
+                                <header class="dashboard-panel-header">
+                                    <h2 class="dashboard-panel-title">Recent Activity</h2>
+                                </header>
+                                <div class="dashboard-panel-body dashboard-panel-body--activity">
+                                    <div id="recent-activity" class="flex flex-col">
                                         <p class="text-fg5 text-body-sm">Loading...</p>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
 
-                        <div class="flex flex-col gap-4">
-                            <div class="h-fit w-fit py-2 px-4 bg-bg3 border border-border">
-                                <p class="text-fg3 font-medium">Pending Posts</p>
-                            </div>
-                            <table class="dashboard-table w-full">
+                        <section class="dashboard-panel dashboard-pending-panel">
+                            <header class="dashboard-panel-header">
+                                <h2 class="dashboard-panel-title">Pending Posts</h2>
+                            </header>
+                            <table class="dashboard-table">
                                 <colgroup>
-                                    <col class="w-[40%]" />
-                                    <col class="w-[10%]" />
-                                    <col class="w-[10%]" />
-                                    <col class="w-[20%]" />
-                                    <col class="w-[14%]" />
-                                    <col class="w-[6%]" />
+                                    <col class="dashboard-column-title" />
+                                    <col class="dashboard-column-author" />
+                                    <col class="dashboard-column-department" />
+                                    <col class="dashboard-column-tag" />
+                                    <col class="dashboard-column-date" />
+                                    <col class="dashboard-column-actions" />
                                 </colgroup>
                                 <thead>
-                                    <tr class="bg-bg3">
+                                    <tr>
                                         <th>Title</th>
                                         <th>Author</th>
                                         <th>Department</th>
@@ -70,13 +70,12 @@ export function AdminPage() {
                                 </thead>
                                 <tbody id="pending-table-body">
                                     <tr>
-                                        <td colspan="6" class="text-center py-8 text-fg5">Loading...</td>
+                                        <td colspan="6" class="text-center py-4 text-fg5">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                </div>
+                        </section>
+                    </main>
             </div>
         </div>
     `;
@@ -152,19 +151,15 @@ function renderTagDistribution(tags: { tag: string; count: number }[]) {
 		.map(({ tag, count }) => {
 			const pct = Math.round((count / maxCount) * 100);
 			return /* HTML */ `
-				<div class="flex items-center gap-3">
-					<span class="text-fg3 text-body-md w-52 truncate shrink-0"
-						>${tag}</span
-					>
-					<div class="flex-1 h-2 bg-bg4 rounded-full overflow-hidden">
+				<div class="dashboard-tag-row">
+					<span class="dashboard-tag-label">${tag}</span>
+					<div class="dashboard-tag-track">
 						<div
-							class="h-full bg-good/40 rounded-full"
+							class="dashboard-tag-fill"
 							style="width: ${pct}%"
 						></div>
 					</div>
-					<span class="text-fg4 text-body-sm w-8 text-right shrink-0"
-						>${count}</span
-					>
+					<span class="dashboard-tag-count">${count}</span>
 				</div>
 			`;
 		})
@@ -177,11 +172,13 @@ function renderRecentActivity() {
 	container.innerHTML = recentActivities
 		.map(
 			(a) => `
-        <div class="flex items-start gap-3">
-            <i data-lucide="${a.icon}" class="w-4 h-4 text-fg4 mt-0.5 shrink-0"></i>
+        <div class="dashboard-activity-item">
+            <div class="dashboard-activity-icon">
+                <i data-lucide="${a.icon}" class="w-4 h-4"></i>
+            </div>
             <div class="flex-1 min-w-0">
-                <p class="text-body-md text-fg3">${a.text}</p>
-                <p class="text-label-md text-fg5">${a.time}</p>
+                <p class="dashboard-activity-text">${a.text}</p>
+                <p class="text-label-md text-fg5 mt-1">${a.time}</p>
             </div>
         </div>
     `,
@@ -214,18 +211,18 @@ function renderPendingPosts(posts: any[]) {
 	tbody.innerHTML = posts
 		.map(
 			(post) => `
-        <tr class="hover:bg-bg2/90 transition-colors">
-            <td class="text-fg2 truncate">${post.title}</td>
-            <td class="text-fg3 truncate">${post.firstName} ${post.lastName}</td>
-            <td class="text-fg3 truncate">${post.departmentName}</td>
-            <td class="text-fg3 truncate"><span class="py-1 px-4 text-body-sm text-bg2 bg-red-100 rounded-xs">${post.postTag || "—"}</span></td>
-            <td class="text-fg3 truncate">${formatDate(post.createdAt)}</td>
+        <tr>
+            <td class="text-fg2"><span class="dashboard-cell-text">${post.title}</span></td>
+            <td class="text-fg3"><span class="dashboard-cell-text">${post.firstName} ${post.lastName}</span></td>
+            <td class="text-fg3"><span class="dashboard-cell-text">${post.departmentName}</span></td>
+            <td class="text-fg3"><span class="dashboard-tag-badge">${post.postTag || "—"}</span></td>
+            <td class="text-fg3"><span class="dashboard-cell-text whitespace-nowrap">${formatDate(post.createdAt)}</span></td>
             <td class="text-fg3 text-right">
                 <div class="flex gap-2 justify-end">
-                    <button class="p-1.5 rounded-xs bg-bad/10 text-bad hover:bg-bad/20 transition-colors" data-reject="${post.id}" title="Reject">
+                    <button class="dashboard-reject-button" data-reject="${post.id}" title="Reject" aria-label="Reject post">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
-                    <button class="p-1.5 rounded-xs bg-good/10 text-good hover:bg-good/20 transition-colors" data-approve="${post.id}" title="Approve">
+                    <button class="dashboard-approve-button" data-approve="${post.id}" title="Approve" aria-label="Approve post">
                         <i data-lucide="check" class="w-4 h-4"></i>
                     </button>
                 </div>

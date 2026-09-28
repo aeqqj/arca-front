@@ -64,7 +64,7 @@ export function coursesTable(courses: Course[], sort: CourseSortConfig) {
                     <td class="text-fg4 truncate">${course.created}</td>
                     <td class="text-right">
                         <button class="data-table-action">
-                            <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                            <i data-lucide="ellipsis" class="w-3 h-3"></i>
                         </button>
                     </td>
                 </tr>

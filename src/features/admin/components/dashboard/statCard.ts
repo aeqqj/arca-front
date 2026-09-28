@@ -12,14 +12,27 @@ const STAT_CONFIG: Record<
 export function statCard(type: StatCardType): string {
 	const { icon, label, id } = STAT_CONFIG[type];
 	return /* HTML */ `
-		<div
-			class="flex-1 flex flex-col gap-4 p-5 bg-bg2 border border-border rounded-xs"
+		<article
+			class="dashboard-stat-card flex min-w-0 flex-col gap-5 rounded-xs border border-border bg-bg2 p-5 sm:p-6"
 		>
-			<div class="flex items-center gap-2">
-				<i data-lucide="${icon}" class="w-4 h-4 text-fg4"></i>
-				<p class="text-body-sm text-fg4">${label}</p>
+			<div class="flex items-center justify-between gap-3">
+				<p
+					class="truncate text-body-sm font-medium tracking-wide text-fg4"
+				>
+					${label}
+				</p>
+				<div
+					class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xs border border-border bg-bg3"
+				>
+					<i data-lucide="${icon}" class="h-4 w-4 text-fg3"></i>
+				</div>
 			</div>
-			<p class="text-heading-lg text-fg1 font-semibold" id="${id}">—</p>
-		</div>
+			<p
+				class="text-3xl font-semibold leading-none tracking-tight text-fg1"
+				id="${id}"
+			>
+				—
+			</p>
+		</article>
 	`;
 }

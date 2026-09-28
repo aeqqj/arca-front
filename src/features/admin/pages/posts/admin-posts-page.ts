@@ -93,9 +93,9 @@ function renderPage() {
 			${adminSideBar()}
 			<div class="flex flex-col flex-1 min-w-0">
 				${adminHeader("Posts")}
-				<div class="flex-1 overflow-hidden p-8 flex flex-col gap-3">
-					<div id="posts-content" class="flex flex-1 min-h-0 gap-4">
-						<div id="posts-list-panel" class="${selectedPost ? "w-1/2" : "w-full"} min-w-0 flex flex-col gap-3">
+				<div class="admin-page-content">
+					<div id="posts-content" class="admin-content-stack admin-post-table-layout">
+						<div id="posts-list-panel" class="flex flex-col gap-3">
 							<div class="flex flex-wrap items-center gap-3">
 								<div class="flex-1 min-w-48">
 									${tableSearchBar({ id: "posts-search", placeholder: "Search title, author, department, or course...", value: searchQuery })}
@@ -103,7 +103,7 @@ function renderPage() {
 								${dropdown("posts-department-filter", departmentFilter, departmentOptions, "All departments")}
 								${dropdown("posts-tag-filter", tagFilter, tagOptions, "All courses")}
 							</div>
-							<div id="posts-table-container" class="admin-table-container flex-1 min-h-0">
+							<div id="posts-table-container" class="admin-table-container admin-table-container--posts">
 								${postsTable(pagePosts, selectedPost?.id ?? null, currentSort)}
 							</div>
 							<div id="posts-pagination-container">
@@ -123,16 +123,12 @@ function renderPage() {
 }
 
 function previewPanel(post: Post): string {
-	return `<div id="posts-preview-panel" class="w-1/2 min-w-0 border border-border bg-bg2 rounded-xs overflow-y-auto">${postFullView(post, false)}</div>`;
+	return `<div id="posts-preview-panel" class="admin-post-preview min-w-0 border border-border bg-bg2 rounded-xs overflow-y-auto">${postFullView(post, false)}</div>`;
 }
 
 function renderSelection() {
 	const content = document.getElementById("posts-content");
-	const listPanel = document.getElementById("posts-list-panel");
-	if (!content || !listPanel) return;
-
-	listPanel.classList.toggle("w-full", !selectedPost);
-	listPanel.classList.toggle("w-1/2", Boolean(selectedPost));
+	if (!content) return;
 
 	const tableContainer = document.getElementById("posts-table-container");
 	if (tableContainer) {
