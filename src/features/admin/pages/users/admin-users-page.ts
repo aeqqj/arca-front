@@ -131,15 +131,15 @@ export function AdminUsersPage() {
             ${adminSideBar()}
             <div class="flex flex-col flex-1 min-w-0">
                 ${adminHeader("Users")}
-                <div class="flex-1 min-h-0 overflow-y-auto p-8 w-full">
-                    <div class="flex flex-col gap-3">
+                <div class="admin-page-content">
+                    <div class="admin-content-stack flex flex-col gap-3">
                         <div class="flex flex-wrap items-center gap-3">
                             <div class="flex-1">
                                 ${tableSearchBar({ value: searchQuery })}
                             </div>
                             ${filters()}
                         </div>
-                        <div id="users-table-container" class="admin-table-container"></div>
+                        <div id="users-table-container" class="admin-table-container admin-table-container--users"></div>
                         <div id="users-pagination-container"></div>
                     </div>
                 </div>
